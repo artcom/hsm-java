@@ -1,0 +1,2 @@
+include 'hsm'
+include 'tests'

@@ -1,0 +1,9 @@
+apply plugin:'java'
+
+dependencies {
+    compile project(':hsm')
+    testCompile 'org.hamcrest:hamcrest-integration:1.1'
+    testCompile 'org.hamcrest:hamcrest-core:1.1'
+    testCompile 'org.hamcrest:hamcrest-library:1.1'
+    testCompile 'junit:junit:4.12'
+}
