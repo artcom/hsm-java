@@ -1,4 +1,4 @@
-package com.hsm;
+package com.hsm.test;
 
 import org.junit.*;
 import static org.junit.Assert.*;
