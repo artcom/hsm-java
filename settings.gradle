@@ -1,2 +1,4 @@
 include 'hsm'
-include 'tests'
+include 'junit_tests'
+include 'testng_tests'
+include 'spock_tests'
