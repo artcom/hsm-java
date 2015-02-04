@@ -2,8 +2,8 @@ apply plugin:'java'
 apply plugin: 'jacoco'
 
 task jacocoReport(type:JacocoReport) {
-    classDirectories = files(['../hsm/build/classes'])
-    sourceDirectories = files(['../hsm/src/main/java'])
+    classDirectories = project(':hsm').sourceSets.main.output
+    sourceDirectories = project(':hsm').sourceSets.main.java
     executionData test
 }
 
