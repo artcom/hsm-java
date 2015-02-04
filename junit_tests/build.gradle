@@ -1,15 +1,15 @@
 apply plugin:'java'
-apply plugin: 'jacoco'
-
-task jacocoReport(type:JacocoReport) {
-    classDirectories = files(['../hsm/build/classes'])
-    sourceDirectories = files(['../hsm/src/main/java'])
-    executionData test
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
-}
+/* apply plugin: 'jacoco' */
+/*  */
+/* task jacocoReport(type:JacocoReport) { */
+/*     classDirectories = files(['../hsm/build/classes']) */
+/*     sourceDirectories = files(['../hsm/src/main/java']) */
+/*     executionData test */
+/*     reports { */
+/*         xml.enabled = true */
+/*         html.enabled = true */
+/*     } */
+/* } */
 
 dependencies {
     compile project(':hsm')
