@@ -6,7 +6,7 @@ import static org.hamcrest.MatcherAssert.*;
 
 import com.hsm.HelloWorld;
 
-public class HelloWorldTest {
+public class HelloWorldTestNgTest {
 
     @Test(description="hello world test")
     public void testResponse() {

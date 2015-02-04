@@ -17,4 +17,9 @@ class HelloWorldSpec extends Specification {
           new HelloWorld().hello() == "Hello World";
     }
 
+    def "test the uncovered method"() {
+        expect:
+          new HelloWorld().uncoveredMethod() == "uncoveredMethod";
+    }
+
 }  

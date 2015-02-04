@@ -24,12 +24,13 @@ public class HelloWorld {
     }
 
     public String hello() {
-        logger.debug("Starting demo");
+        logger.debug("say hello");
         return "Hello World";
     }
 
-    public void unCoveredMethod() {
-
+    public String uncoveredMethod() {
+        logger.debug("uncoveredMethod");
+        return "uncoveredMethod";
     }
 
 }
