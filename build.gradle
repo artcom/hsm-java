@@ -12,6 +12,6 @@ task test_all << {
 }
 
 test_all.dependsOn "junit_tests:test"
-test_all.dependsOn "testng_tests:test"
-test_all.dependsOn "spock_tests:test"
+//test_all.dependsOn "testng_tests:test"
+//test_all.dependsOn "spock_tests:test"
 
