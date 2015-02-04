@@ -28,4 +28,8 @@ public class HelloWorld {
         return "Hello World";
     }
 
+    public void unCoveredMethod() {
+
+    }
+
 }
