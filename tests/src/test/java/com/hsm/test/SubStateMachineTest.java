@@ -16,7 +16,6 @@ import static org.hamcrest.MatcherAssert.*;
 
 import static org.mockito.Mockito.*;
 import org.mockito.InOrder;
-//import org.mockito.internal.InOrderImpl;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.ConsoleAppender;
@@ -44,9 +43,12 @@ public class SubStateMachineTest {
         State loud = new State("loud");
         State quiet = new State("quiet");
         Sub on = new Sub("on", new StateMachine(quiet, loud));
+
+        //when:
         StateMachine sm = new StateMachine(on);
-        //then:
         sm.init();
+
+        //then: no exception
     }
 
     @Test
@@ -70,13 +72,14 @@ public class SubStateMachineTest {
             .onEnter(onEnterOff);
         StateMachine sm = new StateMachine(off, on);
         sm.init();
+
         //when:
         sm.handleEvent("switched_on");
         sm.handleEvent("volume_up");
         sm.handleEvent("switched_off");
         sm.handleEvent("switched_on");
-        //then:
 
+        //then:
         InOrder inOrder = inOrder(onEnterOff, onEnterOn, onEnterQuiet, onEnterLoud);
         inOrder.verify(onEnterOff).run();
         inOrder.verify(onEnterOn).run();

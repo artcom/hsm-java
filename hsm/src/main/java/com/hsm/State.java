@@ -69,9 +69,18 @@ public class State<T extends State<T>> {
         }
     }
 
-    boolean handle(Event event) {
+    Handler findHandler(Event event) {
         for (Handler handler : mHandlers.get(event.getName())) {
-            //TODO: evaluate guard
+            if (handler.isQualifiedToHandle(event)) {
+                return handler;
+            }
+        }
+        return null;
+    }
+
+    boolean handleWithOverride(Event event) {
+        Handler handler = findHandler(event);
+        if (handler != null) {
             logger.debug("handle Event: "+ event.getName());
             //TODO: find lca
             mOwner.executeHandler(handler, event);

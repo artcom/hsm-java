@@ -17,6 +17,11 @@ class Handler {
         mType = type;
     }
 
+    public boolean isQualifiedToHandle(Event event) {
+        //TODO: implement guard
+        return true;
+    }
+
     public String getTargetStateId() {
         return mTargetStateId;
     }

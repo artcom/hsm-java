@@ -52,14 +52,30 @@ public class StateMachine {
         } else {
             mEventQueueInProgress = true;
             while( (mCurrentState != null) && (mEventQueue.peek() != null) ) {
-                handle(mEventQueue.poll());
+                handleWithCasting(mEventQueue.poll());
+                //handleWithOverride(mEventQueue.poll());
             }
             mEventQueueInProgress = false;
         }
     }
 
-    boolean handle(Event event) {
-        return mCurrentState.handle(event);
+    boolean handleWithCasting(Event event) {
+        if (mCurrentState instanceof Sub) {
+            Sub currentSubState = (Sub)mCurrentState;
+            if( currentSubState.handleWithCasting(event)) {
+                return true;
+            }
+        }
+        Handler handler = mCurrentState.findHandler(event);
+        if (handler != null) {
+            executeHandler(handler, event);
+            return true;
+        }
+        return false;
+    }
+
+    boolean handleWithOverride(Event event) {
+        return mCurrentState.handleWithOverride(event);
     }
 
     void executeHandler(Handler handler, Event event) {
