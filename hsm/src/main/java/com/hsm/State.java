@@ -28,14 +28,6 @@ public class State<T extends State<T>> {
         return mId;
     }
 
-    public T foo() {
-        return getThis();
-    }
-
-    public T bar() {
-        return getThis();
-    }
-
     void enter(State prev, State next) {
         logger.debug("enter: " + getId());
         if (mOnEnterAction != null) {

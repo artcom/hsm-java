@@ -31,11 +31,12 @@ public class StateMachine {
 
     public void init() {
         logger.debug("init");
-        enterState(null, mInitialState, null);
+        enterState(null, mInitialState, new HashMap<String, Object>());
     }
 
     public void teardown() {
         logger.debug("teardown");
+        exitState(mCurrentState, null, new HashMap<String, Object>());
     }
 
     private void switchState(State previousState, State nextState, Map<String, Object> payload) {
@@ -46,14 +47,12 @@ public class StateMachine {
     private void enterState(State previousState, State nextState, Map<String, Object> payload) {
         if (nextState != null) {
             mCurrentState = nextState;
-            logger.debug("enterState: "+ mCurrentState.getId());
             nextState.enter(previousState, nextState);
         }
     }
 
     private void exitState(State previousState, State nextState, Map<String, Object> payload) {
         if (previousState != null) {
-            logger.debug("exitState: "+ previousState.getId());
             previousState.exit(previousState, nextState);
         }
     }
@@ -64,20 +63,29 @@ public class StateMachine {
 
     public void handleEvent(String eventName, Map<String, Object> payload) {
         mEventQueue.add(new Event(eventName, payload));
+        logger.debug("handleEvent: "+ eventName);
         if (mEventQueueInProgress) {
             //events are already processed
         } else {
             mEventQueueInProgress = true;
             while(mEventQueue.peek() != null) {
-                applyEvent(mEventQueue.poll());
+                if (mCurrentState != null) { 
+                    applyEvent(mEventQueue.poll());
+                }
             }
+            mEventQueueInProgress = false;
         }
     }
 
-    private void applyEvent(Event event) {
-        if ((mCurrentState != null) && 
-            (mCurrentState.hasHandler(event.getName()))){
-            logger.debug("handleEvent: "+ event.getName());
+    boolean applyEvent(Event event) {
+        if (mCurrentState instanceof Sub) { 
+            Sub currentSubState = (Sub)mCurrentState;
+            if( currentSubState.applyEvent(event)) {
+                return true;
+            }
+        }
+        if (mCurrentState.hasHandler(event.getName())){
+            logger.debug("applyEvent: "+ event.getName());
             Transition transition = mCurrentState.getHandler(event.getName());
             Action transitionAction = transition.getAction();
             String targetStateId = transition.getTargetStateId();
@@ -92,7 +100,9 @@ public class StateMachine {
             if ((targetStateId != null) && (transition.getType() == TransitionType.External)) {
                 switchState(mCurrentState, getStateById(targetStateId), event.getPayload());
             }
+            return true;
         }
+        return false;
     }
 
     private State getStateById(String stateId) {
@@ -100,6 +110,21 @@ public class StateMachine {
             if (state.getId().equals(stateId)) {
                 return state;
             }
+        }
+        return null;
+    }
+
+
+    boolean hasHandler(String eventName) {
+        if (mCurrentState != null) {
+            return mCurrentState.hasHandler(eventName);
+        }
+        return false;
+    }
+
+    Transition getHandler(String eventName) {
+        if (mCurrentState != null) {
+            return mCurrentState.getHandler(eventName);
         }
         return null;
     }

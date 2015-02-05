@@ -43,11 +43,8 @@ public class BasicStateMachineTest {
     }
 
     @Test
-    public void chainTest() {
-        Sub state = new Sub("foo")
-            .foo()
-            .add()
-            .bar()
+    public void canChainMethods() {
+        State state = new State("foo")
             .onEnter(mock(Action.class))
             .onExit(mock(Action.class));
     }
@@ -63,6 +60,20 @@ public class BasicStateMachineTest {
         sm.init();
         //then:
         verify(enterAction).run();
+    }
+
+    @Test
+    public void currentStateIsExited() {
+        //given:
+        Action exitAction = mock(Action.class);
+        State on = new State("on")
+            .onExit(exitAction);
+        StateMachine sm = new StateMachine(on);
+        sm.init();
+        //when:
+        sm.teardown();
+        //then:
+        verify(exitAction).run();
     }
 
     @Test
