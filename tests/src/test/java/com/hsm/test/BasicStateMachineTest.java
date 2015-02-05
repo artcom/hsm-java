@@ -1,5 +1,7 @@
 package com.hsm.test;
 
+import java.util.HashMap;
+
 import com.hsm.Action;
 import com.hsm.State;
 import com.hsm.StateMachine;
@@ -38,8 +40,29 @@ public class BasicStateMachineTest {
         on.onEnter(enterAction);
 
         StateMachine sm = new StateMachine(on);
-        sm.bootUp();
+        sm.init();
         verify(enterAction).run();
+    }
+
+    @Test
+    public void canSwitchStates() {
+        Action onExitAction = mock(Action.class);
+        Action toggleAction = mock(Action.class);
+        State on = new State("on")
+            .addHandler("toggle", "off", toggleAction)
+            .onExit(onExitAction);
+
+        Action offEnterAction = mock(Action.class);
+        State off = new State("off")
+            .onEnter(offEnterAction);
+
+        StateMachine sm = new StateMachine(on, off);
+        sm.init();
+        sm.handleEvent("toggle", new HashMap<String, Object>());
+
+        verify(toggleAction).run();
+        verify(onExitAction).run();
+        verify(offEnterAction).run();
     }
 
 //    abstract class MemoState extends State<MemoState> {
