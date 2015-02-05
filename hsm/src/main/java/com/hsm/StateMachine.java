@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.Queue;
+
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.log4j.Logger;
 
@@ -14,6 +18,8 @@ public class StateMachine {
     private final List<State> mStateList;
     private State mInitialState = null;
     private State mCurrentState;
+    private final Queue<Event> mEventQueue = new ConcurrentLinkedQueue<Event>();
+    private boolean mEventQueueInProgress = false;
 
     public StateMachine(State... states) {
         logger.debug("setup");
@@ -52,25 +58,39 @@ public class StateMachine {
         }
     }
 
+    public void handleEvent(String event) {
+        handleEvent(event, new HashMap<String, Object>());
+    }
+
     public void handleEvent(String eventName, Map<String, Object> payload) {
+        mEventQueue.add(new Event(eventName, payload));
+        if (mEventQueueInProgress) {
+            //events are already processed
+        } else {
+            mEventQueueInProgress = true;
+            while(mEventQueue.peek() != null) {
+                applyEvent(mEventQueue.poll());
+            }
+        }
+    }
+
+    private void applyEvent(Event event) {
         if ((mCurrentState != null) && 
-            (mCurrentState.hasHandler(eventName))){
-            logger.debug("handleEvent: "+ eventName);
-        
-            Transition transition = mCurrentState.getHandler(eventName);
-            
+            (mCurrentState.hasHandler(event.getName()))){
+            logger.debug("handleEvent: "+ event.getName());
+            Transition transition = mCurrentState.getHandler(event.getName());
             Action transitionAction = transition.getAction();
             String targetStateId = transition.getTargetStateId();
             if (transitionAction != null) {
                 transitionAction.setPreviousState(mCurrentState);
                 transitionAction.setNextState(getStateById(targetStateId));
-                transitionAction.setPayload(payload);
+                transitionAction.setPayload(event.getPayload());
                 logger.debug("execute action");
                 transitionAction.run();
             }
 
-            if (targetStateId != null) {
-                switchState(mCurrentState, getStateById(targetStateId), payload);
+            if ((targetStateId != null) && (transition.getType() == TransitionType.External)) {
+                switchState(mCurrentState, getStateById(targetStateId), event.getPayload());
             }
         }
     }
@@ -82,9 +102,6 @@ public class StateMachine {
             }
         }
         return null;
-    }
-
-    public void handleEvent(String event) {
     }
 
 }

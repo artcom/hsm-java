@@ -64,13 +64,13 @@ public class State<T extends State<T>> {
         return getThis();
     }
 
-    public T addHandler(String eventName, String targetId, Action action) {
-        mTransitions.put(eventName, new Transition(targetId, action));
+    public T addHandler(String eventName, String targetId, TransitionType type, Action action) {
+        mTransitions.put(eventName, new Transition(targetId, type, action));
         return getThis();
     }
 
-    public T addHandler(String eventName, String targetId) {
-        mTransitions.put(eventName, new Transition(targetId));
+    public T addHandler(String eventName, String targetId, TransitionType type) {
+        mTransitions.put(eventName, new Transition(targetId, type));
         return getThis();
     }
 
