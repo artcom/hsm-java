@@ -10,11 +10,9 @@ public class State<T extends State<T>> {
     final static Logger logger = Logger.getLogger(StateMachine.class);
 
     private final String mId;
-
     private Action mOnEnterAction;
     private Action mOnExitAction;
-
-    private final Map<String, Transition> mTransitions = new HashMap<String, Transition>();
+    private final Map<String, Handler> mHandlers = new HashMap<String, Handler>();
 
     protected T getThis() {
         return (T) this;
@@ -57,21 +55,21 @@ public class State<T extends State<T>> {
     }
 
     public T addHandler(String eventName, String targetId, TransitionType type, Action action) {
-        mTransitions.put(eventName, new Transition(targetId, type, action));
+        mHandlers.put(eventName, new Handler(targetId, type, action));
         return getThis();
     }
 
     public T addHandler(String eventName, String targetId, TransitionType type) {
-        mTransitions.put(eventName, new Transition(targetId, type));
+        mHandlers.put(eventName, new Handler(targetId, type));
         return getThis();
     }
 
     boolean hasHandler(String eventName) {
-        return mTransitions.containsKey(eventName);
+        return mHandlers.containsKey(eventName);
     }
 
-    Transition getHandler(String eventName) {
-        return mTransitions.get(eventName);
+    Handler getHandler(String eventName) {
+        return mHandlers.get(eventName);
     }
 
 }

@@ -86,7 +86,7 @@ public class StateMachine {
         }
         if (mCurrentState.hasHandler(event.getName())){
             logger.debug("applyEvent: "+ event.getName());
-            Transition transition = mCurrentState.getHandler(event.getName());
+            Handler transition = mCurrentState.getHandler(event.getName());
             Action transitionAction = transition.getAction();
             String targetStateId = transition.getTargetStateId();
             if (transitionAction != null) {
