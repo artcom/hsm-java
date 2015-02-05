@@ -1,3 +1,6 @@
+plugins {
+  id 'net.saliman.cobertura' version '2.2.5'
+}
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'jacoco'
@@ -6,6 +9,11 @@ task jacocoReport(type:JacocoReport) {
     classDirectories = files(project(':hsm').sourceSets.main.output)
     sourceDirectories = files(project(':hsm').sourceSets.main.java.getSrcDirs())
     executionData test
+}
+
+cobertura {
+    coverageDirs = [project(':hsm').sourceSets.main.output]
+    coverageSourceDirs = [project(':hsm').sourceSets.main.java.getSrcDirs()]
 }
 
 // test {
