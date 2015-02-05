@@ -39,6 +39,7 @@ public class BasicStateMachineTest {
     public void canCreateEmptyStateMachine() {
         StateMachine sm = new StateMachine();
         sm.init();
+        sm.handleEvent("foo");
         sm.teardown();
     }
 

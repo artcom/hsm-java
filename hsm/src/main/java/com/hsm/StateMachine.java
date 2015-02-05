@@ -68,7 +68,7 @@ public class StateMachine {
             //events are already processed
         } else {
             mEventQueueInProgress = true;
-            while(mEventQueue.peek() != null) {
+            while( (mCurrentState != null) && (mEventQueue.peek() != null) ) {
                 if (mCurrentState != null) { 
                     applyEvent(mEventQueue.poll());
                 }
@@ -110,21 +110,6 @@ public class StateMachine {
             if (state.getId().equals(stateId)) {
                 return state;
             }
-        }
-        return null;
-    }
-
-
-    boolean hasHandler(String eventName) {
-        if (mCurrentState != null) {
-            return mCurrentState.hasHandler(eventName);
-        }
-        return false;
-    }
-
-    Transition getHandler(String eventName) {
-        if (mCurrentState != null) {
-            return mCurrentState.getHandler(eventName);
         }
         return null;
     }

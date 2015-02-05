@@ -76,8 +76,7 @@ public class SubStateMachineTest {
         sm.handleEvent("switched_on");
         //then:
 
-        InOrder inOrder = inOrder(onEnterOff, onEnterOn, onEnterQuiet, onEnterLoud, onEnterOff, onEnterOn, onEnterQuiet);
-
+        InOrder inOrder = inOrder(onEnterOff, onEnterOn, onEnterQuiet, onEnterLoud);
         inOrder.verify(onEnterOff).run();
         inOrder.verify(onEnterOn).run();
         inOrder.verify(onEnterQuiet).run();
