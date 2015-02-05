@@ -3,7 +3,11 @@ package com.hsm;
 import java.util.Map;
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
+
 public class State<T extends State<T>> {
+
+    final static Logger logger = Logger.getLogger(StateMachine.class);
 
     private final String mId;
 
@@ -33,6 +37,7 @@ public class State<T extends State<T>> {
     }
 
     void enter(State prev, State next) {
+        logger.debug("enter: " + getId());
         if (mOnEnterAction != null) {
             mOnEnterAction.setPreviousState(prev);
             mOnEnterAction.setNextState(next);
@@ -41,6 +46,7 @@ public class State<T extends State<T>> {
     }
 
     void exit(State prev, State next) {
+        logger.debug("exit: " + getId());
         if (mOnExitAction != null) {
             mOnExitAction.setPreviousState(prev);
             mOnExitAction.setNextState(next);
