@@ -31,32 +31,27 @@ public class BasicStateMachineTest {
     }
 
     @Test
-    public void chainTest() {
-        Sub state = new Sub("foo");
-        state
-            .foo()
-            .add()
-            .bar()
-            .onEnter(new Action() {
-                @Override
-                public void run() {
-                    System.out.println("onEnter");
-                }
-            })
-            .onExit(new Action() {
-                @Override
-                public void run() {
-                    System.out.println("exit");
-                }
-            });
+    public void canCreateEmptyStateMachine() {
+        StateMachine sm = new StateMachine();
+        sm.init();
+        sm.teardown();
     }
 
     @Test
-    public void startStateMachineTest() {
-        State on = new State("on");
-        Action enterAction = mock(Action.class);
-        on.onEnter(enterAction);
+    public void chainTest() {
+        Sub state = new Sub("foo")
+            .foo()
+            .add()
+            .bar()
+            .onEnter(mock(Action.class))
+            .onExit(mock(Action.class));
+    }
 
+    @Test
+    public void initialStateIsEntered() {
+        Action enterAction = mock(Action.class);
+        State on = new State("on")
+            .onEnter(enterAction);
         StateMachine sm = new StateMachine(on);
         sm.init();
         verify(enterAction).run();
