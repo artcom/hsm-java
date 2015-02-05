@@ -27,6 +27,7 @@ public class StateMachine {
         if (!mStateList.isEmpty()) {
             mInitialState = mStateList.get(0); 
         }
+        setOwner();
     }
 
     public void init() {
@@ -37,6 +38,47 @@ public class StateMachine {
     public void teardown() {
         logger.debug("teardown");
         exitState(mCurrentState, null, new HashMap<String, Object>());
+    }
+
+    public void handleEvent(String event) {
+        handleEvent(event, new HashMap<String, Object>());
+    }
+
+    public void handleEvent(String eventName, Map<String, Object> payload) {
+        mEventQueue.add(new Event(eventName, payload));
+        logger.debug("handleEvent: "+ eventName);
+        if (mEventQueueInProgress) {
+            //events are already processed
+        } else {
+            mEventQueueInProgress = true;
+            while( (mCurrentState != null) && (mEventQueue.peek() != null) ) {
+                handle(mEventQueue.poll());
+            }
+            mEventQueueInProgress = false;
+        }
+    }
+
+    boolean handle(Event event) {
+        return mCurrentState.handle(event);
+    }
+
+    void executeHandler(Handler handler, Event event) {
+        logger.debug("execute handler for event: " + event.getName());
+        Action handlerAction = handler.getAction();
+        State targetState = getStateById(handler.getTargetStateId());
+        if (handlerAction != null) {
+            handlerAction.setPreviousState(mCurrentState);
+            handlerAction.setNextState(targetState);
+            handlerAction.setPayload(event.getPayload());
+            handlerAction.run();
+        }
+        switch(handler.getType()) {
+            case External:
+                switchState(mCurrentState, targetState, event.getPayload());
+                break;
+            case Internal:
+                break;
+        }
     }
 
     private void switchState(State previousState, State nextState, Map<String, Object> payload) {
@@ -57,54 +99,6 @@ public class StateMachine {
         }
     }
 
-    public void handleEvent(String event) {
-        handleEvent(event, new HashMap<String, Object>());
-    }
-
-    public void handleEvent(String eventName, Map<String, Object> payload) {
-        mEventQueue.add(new Event(eventName, payload));
-        logger.debug("handleEvent: "+ eventName);
-        if (mEventQueueInProgress) {
-            //events are already processed
-        } else {
-            mEventQueueInProgress = true;
-            while( (mCurrentState != null) && (mEventQueue.peek() != null) ) {
-                if (mCurrentState != null) { 
-                    applyEvent(mEventQueue.poll());
-                }
-            }
-            mEventQueueInProgress = false;
-        }
-    }
-
-    boolean applyEvent(Event event) {
-        if (mCurrentState instanceof Sub) { 
-            Sub currentSubState = (Sub)mCurrentState;
-            if( currentSubState.applyEvent(event)) {
-                return true;
-            }
-        }
-        if (mCurrentState.hasHandler(event.getName())){
-            logger.debug("applyEvent: "+ event.getName());
-            Handler transition = mCurrentState.getHandler(event.getName());
-            Action transitionAction = transition.getAction();
-            String targetStateId = transition.getTargetStateId();
-            if (transitionAction != null) {
-                transitionAction.setPreviousState(mCurrentState);
-                transitionAction.setNextState(getStateById(targetStateId));
-                transitionAction.setPayload(event.getPayload());
-                logger.debug("execute action");
-                transitionAction.run();
-            }
-
-            if ((targetStateId != null) && (transition.getType() == TransitionType.External)) {
-                switchState(mCurrentState, getStateById(targetStateId), event.getPayload());
-            }
-            return true;
-        }
-        return false;
-    }
-
     private State getStateById(String stateId) {
         for (State state: mStateList) {
             if (state.getId().equals(stateId)) {
@@ -112,6 +106,12 @@ public class StateMachine {
             }
         }
         return null;
+    }
+
+    private void setOwner() {
+        for (State state: mStateList) {
+            state.setOwner(this);
+        }
     }
 
 }

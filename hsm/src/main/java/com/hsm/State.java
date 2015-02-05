@@ -1,7 +1,6 @@
 package com.hsm;
 
-import java.util.Map;
-import java.util.HashMap;
+import com.google.common.collect.LinkedListMultimap;
 
 import org.apache.log4j.Logger;
 
@@ -12,36 +11,16 @@ public class State<T extends State<T>> {
     private final String mId;
     private Action mOnEnterAction;
     private Action mOnExitAction;
-    private final Map<String, Handler> mHandlers = new HashMap<String, Handler>();
+    private final LinkedListMultimap<String, Handler> mHandlers;
+    private StateMachine mOwner;
 
     protected T getThis() {
         return (T) this;
     }
 
     public State(String id) {
+        mHandlers = LinkedListMultimap.create();
         mId = id;
-    }
-
-    public String getId() {
-        return mId;
-    }
-
-    void enter(State prev, State next) {
-        logger.debug("enter: " + getId());
-        if (mOnEnterAction != null) {
-            mOnEnterAction.setPreviousState(prev);
-            mOnEnterAction.setNextState(next);
-            mOnEnterAction.run();
-        }
-    }
-
-    void exit(State prev, State next) {
-        logger.debug("exit: " + getId());
-        if (mOnExitAction != null) {
-            mOnExitAction.setPreviousState(prev);
-            mOnExitAction.setNextState(next);
-            mOnExitAction.run();
-        }
     }
 
     public T onEnter(Action onEnterAction) {
@@ -64,12 +43,41 @@ public class State<T extends State<T>> {
         return getThis();
     }
 
-    boolean hasHandler(String eventName) {
-        return mHandlers.containsKey(eventName);
+    void setOwner(StateMachine ownerMachine) {
+        mOwner = ownerMachine;
     }
 
-    Handler getHandler(String eventName) {
-        return mHandlers.get(eventName);
+    String getId() {
+        return mId;
+    }
+
+    void enter(State prev, State next) {
+        logger.debug("enter: " + getId());
+        if (mOnEnterAction != null) {
+            mOnEnterAction.setPreviousState(prev);
+            mOnEnterAction.setNextState(next);
+            mOnEnterAction.run();
+        }
+    }
+
+    void exit(State prev, State next) {
+        logger.debug("exit: " + getId());
+        if (mOnExitAction != null) {
+            mOnExitAction.setPreviousState(prev);
+            mOnExitAction.setNextState(next);
+            mOnExitAction.run();
+        }
+    }
+
+    boolean handle(Event event) {
+        for (Handler handler : mHandlers.get(event.getName())) {
+            //TODO: evaluate guard
+            logger.debug("handle Event: "+ event.getName());
+            //TODO: find lca
+            mOwner.executeHandler(handler, event);
+            return true;
+        }
+        return false;
     }
 
 }

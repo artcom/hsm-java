@@ -34,6 +34,7 @@ public class SubStateMachineTest {
         console.setLayout(new PatternLayout(pattern)); 
         console.setThreshold(Level.ALL);
         console.activateOptions();
+        Logger.getRootLogger().removeAllAppenders();
         Logger.getRootLogger().addAppender(console);
     }
 

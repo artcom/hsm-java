@@ -2,19 +2,20 @@ package com.hsm;
 
 import java.util.Map;
 
-public class Action implements Runnable {
+public abstract class Action {
 
-    protected State mPreviousState = null;
-    protected State mNextState = null;
-    protected Map<String, Object> mPayload = null;
+    private State mPreviousState = null;
+    private State mNextState = null;
+    private Map<String, Object> mPayload = null;
 
-    @Override
-    public void run() {
-    }
+    public abstract void run();
 
     public Map<String, Object> getPayload() {
         return mPayload;
     }
+
+    //public State getPreviousState()
+    //public State getNextState()
 
     void setPreviousState(State state) {
         mPreviousState = state;

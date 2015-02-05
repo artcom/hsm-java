@@ -24,8 +24,12 @@ public class Sub extends State<Sub> {
         super.exit(prev, next);
     }
 
-    boolean applyEvent(Event event) {
-        return mSubMachine.applyEvent(event);
+    boolean handle(Event event) {
+        if(mSubMachine.handle(event)) {
+            return true;
+        } else {
+            return super.handle(event);
+        }
     }
 
 }
