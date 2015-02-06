@@ -24,6 +24,7 @@ public class Sub extends State<Sub> {
     void enter(State prev, State next) {
         super.enter(prev, next);
         mSubMachine.init();
+//        mSubMachine.enterState(prev, next);
     }
 
     void exit(State prev, State next) {

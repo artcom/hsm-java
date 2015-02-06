@@ -93,7 +93,10 @@ public class StateMachine {
     }
 
     boolean handleWithOverride(Event event) {
-        return mCurrentState.handleWithOverride(event);
+        if(mCurrentState != null) {
+            return mCurrentState.handleWithOverride(event);
+        }
+        return false;
     }
 
     void executeHandler(Handler handler, Event event) {
@@ -124,15 +127,15 @@ public class StateMachine {
     }
 
     void enterState(State previousState, State targetState, Map<String, Object> payload) {
-        int targetLevel = targetState.getOwner().getPath().size(); // 3
-        int localLevel = mPath.size();                             // 1
-        if(targetLevel < localLevel) {
-            mCurrentState = mInitialState;
-        } else if(targetLevel == localLevel) {
-            mCurrentState = targetState;
-        } else {
-            mCurrentState = targetState.getOwner().getPath().get(localLevel).getOwner();
-        }
+//        int targetLevel = targetState.getOwner().getPath().size(); // 3
+//        int localLevel = mPath.size();                             // 1
+//        if(targetLevel < localLevel) {
+//            mCurrentState = mInitialState;
+//        } else if(targetLevel == localLevel) {
+//            mCurrentState = targetState;
+//        } else {
+////            mCurrentState = targetState.getOwner().getPath().get(localLevel).getOwner();
+//        }
 
 
 
@@ -143,7 +146,9 @@ public class StateMachine {
     }
 
     private void exitState(State previousState, State nextState, Map<String, Object> payload) {
-        mCurrentState.exit(previousState, nextState);
+        if(mCurrentState != null) {
+            mCurrentState.exit(previousState, nextState);
+        }
     }
 
     State getStateById(String stateId) {
