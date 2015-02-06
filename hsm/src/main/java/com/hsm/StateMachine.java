@@ -52,8 +52,8 @@ public class StateMachine {
         } else {
             mEventQueueInProgress = true;
             while( (mCurrentState != null) && (mEventQueue.peek() != null) ) {
-                handleWithCasting(mEventQueue.poll());
-                //handleWithOverride(mEventQueue.poll());
+                //handleWithCasting(mEventQueue.poll());
+                mCurrentState.handleWithOverride(mEventQueue.poll());
             }
             mEventQueueInProgress = false;
         }

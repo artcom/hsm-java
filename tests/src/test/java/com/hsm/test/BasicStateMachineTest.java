@@ -128,10 +128,10 @@ public class BasicStateMachineTest {
             @Override
             public void run() {
                 actionGotCalled[0] = true;
-                assertThat(getPayload(), notNullValue());
-                Assert.assertTrue(getPayload().containsKey("foo"));
-                Assert.assertTrue(getPayload().get("foo") instanceof String);
-                Assert.assertTrue(((String)getPayload().get("foo")).equals("bar"));
+                assertThat(mPayload, notNullValue());
+                Assert.assertTrue(mPayload.containsKey("foo"));
+                Assert.assertTrue(mPayload.get("foo") instanceof String);
+                Assert.assertTrue(((String)mPayload.get("foo")).equals("bar"));
             }
         };
         State on = new State("on")
@@ -159,8 +159,8 @@ public class BasicStateMachineTest {
             @Override
             public void run() {
                 actionGotCalled[0] = true;
-                assertThat(getPayload(), notNullValue());
-                Assert.assertTrue(getPayload().isEmpty());
+                assertThat(mPayload, notNullValue());
+                Assert.assertTrue(mPayload.isEmpty());
             }
         };
         State on = new State("on")
