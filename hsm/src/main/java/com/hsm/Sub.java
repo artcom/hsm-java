@@ -14,11 +14,13 @@ public class Sub extends State<Sub> {
     public Sub(String id, StateMachine subMachine) {
         super(id);
         mSubMachine = subMachine;
+        mSubMachine.setOrigin(this);
     }
 
     public Sub(String id, State... states) {
         super(id);
         mSubMachine = new StateMachine(states);
+        mSubMachine.setOrigin(this);
     }
 
     void enter(State prev, State next) {

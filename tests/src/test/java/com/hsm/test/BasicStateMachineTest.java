@@ -16,6 +16,7 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.*;
 
 import static org.mockito.Mockito.*;
+import static org.spockframework.util.Assert.fail;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.ConsoleAppender;
@@ -98,6 +99,25 @@ public class BasicStateMachineTest {
         //then:
         verify(onExitAction).run();
         verify(offEnterAction).run();
+    }
+
+    @Test
+    public void impossibleTransitionTest() {
+        // given:
+        Action onExitAction = mock(Action.class);
+        State on = new State("on")
+            .addHandler("toggle", "off", TransitionType.External)
+            .onExit(onExitAction);
+        Action offEnterAction = mock(Action.class);
+        StateMachine sm = new StateMachine(on);
+        sm.init();
+
+        // when:
+        try {
+            sm.handleEvent("toggle");
+            fail("expected NullpointerException but nothing happnend");
+        } catch (NullPointerException npe) {
+        }
     }
 
     @Test

@@ -13,7 +13,9 @@ import org.apache.log4j.PatternLayout;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.InOrder;
 
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
 public class LcaTest {
@@ -31,71 +33,24 @@ public class LcaTest {
         Logger.getRootLogger().addAppender(console);
     }
 
-    @Ignore
-    @Test
-    public void pathTest() {
-        State a1 = new State("a1");
-        Sub a = new Sub("a", a1);
-        Sub foo = new Sub("foo", a);
-        Sub bar = new Sub("bar", foo);
-        StateMachine sm = new StateMachine(bar);
-        sm.init();
-
-        logger.debug("path of a: " + a.getPath());
-        logger.debug("path of foo: " + foo.getPath());
-        logger.debug("path of bar: " + bar.getPath());
-        logger.debug("path of sm: " + sm.getPathString());
-    }
-
-    @Ignore
-    @Test
-    public void lcaTest() {
-        State a1 = new State("a1");
-        Sub a = new Sub("a", a1);
-        State c1 = new State("c1");
-        Sub c = new Sub("c", c1);
-        Sub foo = new Sub("foo", a, c);
-
-        State b1 = new State("b1");
-        Sub b = new Sub("b", b1);
-        Sub bar = new Sub("bar", b);
-        StateMachine sm = new StateMachine(foo, bar);
-        sm.init();
-
-        StateMachine lca = a.lca(c1);
-        logger.debug("result: " + lca);
-    }
-
-    @Ignore
-    @Test
-    public void testDecendantStates() {
-        State a1 = new State("a1");
-        Sub a = new Sub("a", a1);
-        State c1 = new State("c1");
-        Sub c = new Sub("c", c1);
-        Sub foo = new Sub("foo", a, c);
-
-        State b1 = new State("b1");
-        Sub b = new Sub("b", b1);
-        Sub bar = new Sub("bar", b);
-        StateMachine sm = new StateMachine(foo, bar);
-        sm.init();
-    }
-
     @Test
     public void testLowestCommonAncestor1() {
         // given:
         Action exitA1 = mock(Action.class);
         Action exitA = mock(Action.class);
         Action exitFoo = mock(Action.class);
-        State a1 = new State("a1").onExit(exitA1).addHandler("T1", "b1", TransitionType.External);
+        State a1 = new State("a1").onExit(exitA1).addHandler("T1", "bar", TransitionType.External);
         Sub a = new Sub("a", a1).onExit(exitA);
         Sub foo = new Sub("foo", a).onExit(exitFoo);
 
+        Action enterB21 = mock(Action.class);
+        Action enterB201 = mock(Action.class);
         Action enterB1 = mock(Action.class);
         Action enterB = mock(Action.class);
         Action enterBar = mock(Action.class);
-        State b1 = new State("b1").onEnter(enterB1);
+        State b201 = new State("b201").onEnter(enterB201);
+        Sub b21 = new Sub("b21", b201).onEnter(enterB21);
+        Sub b1 = new Sub("b1",b21).onEnter(enterB1);
         Sub b = new Sub("b", b1).onEnter(enterB);
         Sub bar = new Sub("bar", b).onEnter(enterBar);
         StateMachine sm = new StateMachine(foo, bar);
@@ -105,7 +60,53 @@ public class LcaTest {
         sm.handleEvent("T1");
 
         // then:
+        InOrder inOrder = inOrder(exitA, exitA1, exitFoo, enterB, enterB1, enterBar, enterB21, enterB201);
+        inOrder.verify(exitA1).run();
+        inOrder.verify(exitA).run();
+        inOrder.verify(exitFoo).run();
+        inOrder.verify(enterBar).run();
+        inOrder.verify(enterB).run();
+        inOrder.verify(enterB1).run();
+        inOrder.verify(enterB21).run();
+        inOrder.verify(enterB201).run();
+    }
 
+    @Test
+    public void testLowestCommonAncestor2() {
+        // given:
+        Action exitA1 = mock(Action.class);
+        Action exitA = mock(Action.class);
+        Action exitFoo = mock(Action.class);
+        State a1 = new State("a1").onExit(exitA1).addHandler("T1", "b201", TransitionType.External);
+        Sub a = new Sub("a", a1).onExit(exitA);
+        Sub foo = new Sub("foo", a).onExit(exitFoo);
+
+        Action enterB21 = mock(Action.class);
+        Action enterB201 = mock(Action.class);
+        Action enterB1 = mock(Action.class);
+        Action enterB = mock(Action.class);
+        Action enterBar = mock(Action.class);
+        State b201 = new State("b201").onEnter(enterB201);
+        Sub b21 = new Sub("b21", b201).onEnter(enterB21);
+        Sub b1 = new Sub("b1",b21).onEnter(enterB1);
+        Sub b = new Sub("b", b1).onEnter(enterB);
+        Sub bar = new Sub("bar", b).onEnter(enterBar);
+        StateMachine sm = new StateMachine(foo, bar);
+        sm.init();
+
+        // when:
+        sm.handleEvent("T1");
+
+        // then:
+        InOrder inOrder = inOrder(exitA, exitA1, exitFoo, enterB, enterB1, enterBar, enterB21, enterB201);
+        inOrder.verify(exitA1).run();
+        inOrder.verify(exitA).run();
+        inOrder.verify(exitFoo).run();
+        inOrder.verify(enterBar).run();
+        inOrder.verify(enterB).run();
+        inOrder.verify(enterB1).run();
+        inOrder.verify(enterB21).run();
+        inOrder.verify(enterB201).run();
     }
 
 }

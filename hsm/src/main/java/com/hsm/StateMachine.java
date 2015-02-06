@@ -22,6 +22,7 @@ public class StateMachine {
     private final Queue<Event> mEventQueue = new ConcurrentLinkedQueue<Event>();
     private boolean mEventQueueInProgress = false;
     private final List<StateMachine> mPath = new ArrayList<StateMachine>();
+    private State mOrigin;
 
 
     public StateMachine(State... states) {
@@ -32,6 +33,14 @@ public class StateMachine {
         setOwner();
         generatePath();
         generateDecendantStateList();
+    }
+
+    void setOrigin(State origin) {
+        mOrigin = origin;
+    }
+
+    State getOrigin() {
+        return mOrigin;
     }
 
     private void generateDecendantStateList() {
@@ -127,22 +136,22 @@ public class StateMachine {
     }
 
     void enterState(State previousState, State targetState, Map<String, Object> payload) {
-//        int targetLevel = targetState.getOwner().getPath().size(); // 3
-//        int localLevel = mPath.size();                             // 1
-//        if(targetLevel < localLevel) {
-//            mCurrentState = mInitialState;
-//        } else if(targetLevel == localLevel) {
-//            mCurrentState = targetState;
-//        } else {
-////            mCurrentState = targetState.getOwner().getPath().get(localLevel).getOwner();
-//        }
-
-
-
-        if (targetState != null) {
-            mCurrentState = targetState;
-            targetState.enter(previousState, targetState);
+        if(targetState == null) {
+            return;
         }
+
+        int targetLevel = targetState.getOwner().getPath().size();
+        int localLevel = mPath.size();
+        if(targetLevel < localLevel) {
+            mCurrentState = mInitialState;
+        } else if(targetLevel == localLevel) {
+            mCurrentState = targetState;
+        } else { // if targetLevel > localLevel
+            StateMachine targetOwnerStateMachine = targetState.getOwner();
+            StateMachine decendentStateMachine = targetOwnerStateMachine.getPath().get(localLevel);
+            mCurrentState = decendentStateMachine.getOrigin();
+        }
+        mCurrentState.enter(previousState, targetState);
     }
 
     private void exitState(State previousState, State nextState, Map<String, Object> payload) {
@@ -205,11 +214,16 @@ public class StateMachine {
 
     // TODO: make it package private
     public StateMachine findLowestCommonAncestor(State targetState) {
+        List<StateMachine> targetPath = targetState.getOwner().getPath();
         int size = mPath.size();
         for (int i = 1; i < size; i++) {
-            StateMachine targetAncestor = targetState.getOwner().getPath().get(i);
-            StateMachine localAncestor = mPath.get(i);
-            if(!targetAncestor.equals(localAncestor)) {
+            try {
+                StateMachine targetAncestor = targetPath.get(i);
+                StateMachine localAncestor = mPath.get(i);
+                if(!targetAncestor.equals(localAncestor)) {
+                    return mPath.get(i - 1);
+                }
+            } catch (IndexOutOfBoundsException e) {
                 return mPath.get(i - 1);
             }
         }
