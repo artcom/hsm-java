@@ -118,6 +118,4 @@ public class ParallelStateMachineTest {
         inOrder.verify(onEnterCapsOff).run();
         inOrder.verify(onEnterNumOff).run();
     }
-
-
 }

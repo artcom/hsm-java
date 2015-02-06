@@ -14,6 +14,11 @@ public class Sub extends State<Sub> {
         mSubMachine = subMachine;
     }
 
+    public Sub(String id, State... states) {
+        super(id);
+        mSubMachine = new StateMachine(states);;
+    }
+
     void enter(State prev, State next) {
         super.enter(prev, next);
         mSubMachine.init();

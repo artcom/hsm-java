@@ -33,8 +33,18 @@ public class State<T extends State<T>> {
         return getThis();
     }
 
+    public T addHandler(String eventName, String targetId, TransitionType type, Guard guard) {
+        mHandlers.put(eventName, new Handler(targetId, type, guard));
+        return getThis();
+    }
+
     public T addHandler(String eventName, String targetId, TransitionType type, Action action) {
         mHandlers.put(eventName, new Handler(targetId, type, action));
+        return getThis();
+    }
+
+    public T addHandler(String eventName, String targetId, TransitionType type, Action action, Guard guard) {
+        mHandlers.put(eventName, new Handler(targetId, type, action, guard));
         return getThis();
     }
 
@@ -71,7 +81,7 @@ public class State<T extends State<T>> {
 
     Handler findHandler(Event event) {
         for (Handler handler : mHandlers.get(event.getName())) {
-            if (handler.isQualifiedToHandle(event)) {
+            if (handler.evaluate(event)) {
                 return handler;
             }
         }

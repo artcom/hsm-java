@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 import com.hsm.Action;
+import com.hsm.Guard;
 import com.hsm.TransitionType;
 import com.hsm.State;
 import com.hsm.StateMachine;
@@ -56,7 +57,7 @@ public class BasicStateMachineTest {
         //given:
         Action enterAction = mock(Action.class);
         State on = new State("on")
-            .onEnter(enterAction);
+                .onEnter(enterAction);
         StateMachine sm = new StateMachine(on);
         //when:
         sm.init();
@@ -195,46 +196,6 @@ public class BasicStateMachineTest {
         //then:
         verify(toggleAction).run();
         verifyZeroInteractions(onExitAction);
-    }
-
-    @Test
-    public void eventsAreHandledAccordingToRunToCompletion() {
-        //given:
-        State rawEgg = new State("rawEgg");
-        State softEgg = new State("softEgg");
-        State hardEgg = new State("hardEgg");
-        final StateMachine sm = new StateMachine(rawEgg, softEgg, hardEgg);
-
-        Action boilAction = new Action() {
-            @Override
-            public void run() {
-                sm.handleEvent("boil_too_long");
-            }
-        };
-
-        Action onEnterHardEgg = mock(Action.class);
-        Action onEnterSoftEgg = mock(Action.class);
-
-        softEgg.onEnter(onEnterSoftEgg);
-        hardEgg.onEnter(onEnterHardEgg);
-        rawEgg.addHandler("boil", "softEgg", TransitionType.External, boilAction);
-
-        Action boilTooLongAction = mock(Action.class);
-        rawEgg.addHandler("boil_too_long", "hardEgg", TransitionType.External, boilTooLongAction);
-
-        Action boilTooLongAction2 = mock(Action.class);
-        softEgg.addHandler("boil_too_long", "softEgg", TransitionType.Internal, boilTooLongAction2);
-
-        sm.init();
-
-        //when:
-        sm.handleEvent("boil");
-
-        //then:
-        verifyZeroInteractions(onEnterHardEgg);
-        verifyZeroInteractions(boilTooLongAction);
-        verify(onEnterSoftEgg).run();
-        verify(boilTooLongAction2).run();
     }
 
 //    abstract class MemoState extends State<MemoState> {
