@@ -61,4 +61,11 @@ public class Parallel extends State<Parallel> {
         sb.append(")");
         return sb.toString();
     }
+
+    @Override
+    void addParent(StateMachine stateMachine) {
+        for(StateMachine machine : mStateMachineList) {
+            machine.addParent(stateMachine);
+        }
+    }
 }

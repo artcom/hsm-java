@@ -103,4 +103,8 @@ public class State<T extends State<T>> {
     public String toString() {
         return mId.toString();
     }
+
+    void addParent(StateMachine stateMachine) {
+        // do nothing
+    }
 }

@@ -20,6 +20,8 @@ public class StateMachine {
     private State mCurrentState;
     private final Queue<Event> mEventQueue = new ConcurrentLinkedQueue<Event>();
     private boolean mEventQueueInProgress = false;
+    private final List<StateMachine> mPath = new ArrayList<StateMachine>();
+
 
     public StateMachine(State... states) {
         mStateList = Arrays.asList(states);
@@ -27,6 +29,14 @@ public class StateMachine {
             mInitialState = mStateList.get(0); 
         }
         setOwner();
+        generatePath();
+    }
+
+    private void generatePath() {
+        mPath.add(0, this);
+        for(State state : mStateList) {
+            state.addParent(this);
+        }
     }
 
     public void init() {
@@ -131,6 +141,27 @@ public class StateMachine {
 
     @Override
     public String toString() {
+        if(mCurrentState == null) {
+            return mInitialState.toString();
+        }
         return mCurrentState.toString();
     }
+
+    public String getPath() {
+        StringBuilder sb = new StringBuilder();
+        int count = 0;
+        for(StateMachine stateMachine : mPath) {
+            sb.append(Integer.toString(++count));
+            sb.append(" ");
+            sb.append(stateMachine.toString());
+            sb.append("\r\n");
+        }
+        return sb.toString();
+    }
+
+    public void addParent(StateMachine stateMachine) {
+        logger.debug("addParent " + stateMachine.toString());
+        mPath.add(0, stateMachine);
+    }
+
 }

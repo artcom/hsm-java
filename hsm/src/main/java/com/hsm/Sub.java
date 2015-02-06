@@ -16,7 +16,7 @@ public class Sub extends State<Sub> {
 
     public Sub(String id, State... states) {
         super(id);
-        mSubMachine = new StateMachine(states);;
+        mSubMachine = new StateMachine(states);
     }
 
     void enter(State prev, State next) {
@@ -50,5 +50,14 @@ public class Sub extends State<Sub> {
         sb.append(mSubMachine.toString());
         sb.append(")");
         return sb.toString();
+    }
+
+    @Override
+    void addParent(StateMachine stateMachine) {
+        mSubMachine.addParent(stateMachine);
+    }
+
+    public String getPath() {
+        return mSubMachine.getPath();
     }
 }
