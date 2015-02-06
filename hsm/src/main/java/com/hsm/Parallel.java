@@ -1,6 +1,8 @@
 package com.hsm;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class Parallel extends State<Parallel> {
@@ -21,7 +23,7 @@ public class Parallel extends State<Parallel> {
     @Override
     void enter(State prev, State next) {
         super.enter(prev, next);
-        for(StateMachine stateMachine : mStateMachineList) {
+        for (StateMachine stateMachine : mStateMachineList) {
             stateMachine.init();
         }
     }
@@ -29,7 +31,7 @@ public class Parallel extends State<Parallel> {
     @Override
     void exit(State prev, State next) {
         super.exit(prev, next);
-        for(StateMachine stateMachine : mStateMachineList) {
+        for (StateMachine stateMachine : mStateMachineList) {
             stateMachine.teardown();
         }
     }
@@ -37,12 +39,12 @@ public class Parallel extends State<Parallel> {
     @Override
     boolean handleWithOverride(Event event) {
         boolean isHandled = false;
-        for(StateMachine stateMachine : mStateMachineList) {
-            if(stateMachine.handleWithOverride(event)) {
+        for (StateMachine stateMachine : mStateMachineList) {
+            if (stateMachine.handleWithOverride(event)) {
                 isHandled = true;
             }
         }
-        if(!isHandled) {
+        if (!isHandled) {
             return super.handleWithOverride(event);
         }
         return true;
@@ -64,8 +66,17 @@ public class Parallel extends State<Parallel> {
 
     @Override
     void addParent(StateMachine stateMachine) {
-        for(StateMachine machine : mStateMachineList) {
+        for (StateMachine machine : mStateMachineList) {
             machine.addParent(stateMachine);
         }
+    }
+
+    @Override
+    Collection<? extends State> getDecendantStates() {
+        List<State> decendantStates = new ArrayList<State>();
+        for (StateMachine stateMachine : mStateMachineList) {
+            decendantStates.addAll(stateMachine.getDecendantStates());
+        }
+        return decendantStates;
     }
 }

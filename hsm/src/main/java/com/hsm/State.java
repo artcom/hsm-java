@@ -4,14 +4,21 @@ import com.google.common.collect.LinkedListMultimap;
 
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 public class State<T extends State<T>> {
 
     final static Logger logger = Logger.getLogger(StateMachine.class);
 
     private final String mId;
+
     private Action mOnEnterAction;
+
     private Action mOnExitAction;
+
     private final LinkedListMultimap<String, Handler> mHandlers;
+
     private StateMachine mOwner;
 
     protected T getThis() {
@@ -57,6 +64,10 @@ public class State<T extends State<T>> {
         mOwner = ownerMachine;
     }
 
+    StateMachine getOwner() {
+        return mOwner;
+    }
+
     String getId() {
         return mId;
     }
@@ -91,8 +102,7 @@ public class State<T extends State<T>> {
     boolean handleWithOverride(Event event) {
         Handler handler = findHandler(event);
         if (handler != null) {
-            logger.debug("handle Event: "+ event.getName());
-            //TODO: find lca
+            logger.debug("handle Event: " + event.getName());
             mOwner.executeHandler(handler, event);
             return true;
         }
@@ -106,5 +116,9 @@ public class State<T extends State<T>> {
 
     void addParent(StateMachine stateMachine) {
         // do nothing
+    }
+
+    Collection<? extends State> getDecendantStates() {
+        return new ArrayList<State>();
     }
 }

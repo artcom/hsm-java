@@ -1,5 +1,7 @@
 package com.hsm;
 
+import java.util.Collection;
+
 public class Sub extends State<Sub> {
 
     private final StateMachine mSubMachine;
@@ -31,7 +33,7 @@ public class Sub extends State<Sub> {
 
     @Override
     boolean handleWithOverride(Event event) {
-        if(mSubMachine.handleWithOverride(event)) {
+        if (mSubMachine.handleWithOverride(event)) {
             return true;
         } else {
             return super.handleWithOverride(event);
@@ -58,6 +60,16 @@ public class Sub extends State<Sub> {
     }
 
     public String getPath() {
-        return mSubMachine.getPath();
+        return mSubMachine.getPathString();
     }
+
+    public StateMachine lca(State targetState) {
+        return mSubMachine.findLowestCommonAncestor(targetState);
+    }
+
+    @Override
+    Collection<? extends State> getDecendantStates() {
+        return mSubMachine.getDecendantStates();
+    }
+
 }
