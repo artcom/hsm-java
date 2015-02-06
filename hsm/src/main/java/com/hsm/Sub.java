@@ -37,4 +37,13 @@ public class Sub extends State<Sub> {
         return mSubMachine.handleWithCasting(event);
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getId());
+        sb.append("/(");
+        sb.append(mSubMachine.toString());
+        sb.append(")");
+        return sb.toString();
+    }
 }

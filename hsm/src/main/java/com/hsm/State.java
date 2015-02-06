@@ -89,4 +89,8 @@ public class State<T extends State<T>> {
         return false;
     }
 
+    @Override
+    public String toString() {
+        return mId.toString();
+    }
 }

@@ -22,8 +22,7 @@ public class StateMachine {
     private boolean mEventQueueInProgress = false;
 
     public StateMachine(State... states) {
-        logger.debug("setup");
-        mStateList = new ArrayList<State>(Arrays.asList(states));
+        mStateList = Arrays.asList(states);
         if (!mStateList.isEmpty()) {
             mInitialState = mStateList.get(0); 
         }
@@ -130,4 +129,8 @@ public class StateMachine {
         }
     }
 
+    @Override
+    public String toString() {
+        return mCurrentState.toString();
+    }
 }
