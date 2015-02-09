@@ -111,21 +111,30 @@ public class StateMachine {
             handlerAction.run();
         }
 
-        StateMachine lca = findLowestCommonAncestor(targetState);
         switch (handler.getType()) {
             case External:
+                StateMachine lca = findLowestCommonAncestor(targetState);
                 lca.switchState(mCurrentState, targetState, event.getPayload());
                 break;
             case Local:
-                if(mCurrentState.getDecendantStates().contains(targetState)) {
-                    StateMachine stateMachine = findNextStateMachineOnPathTo(targetState);
-                    stateMachine.switchState(mCurrentState, targetState, event.getPayload());
-                } else {
-                    throw new IllegalStateException("Target state is no sub state of " + mCurrentState.getId() + " therefore a local transition is not Possible.");
-                }
+                doLocalTransition(targetState, event);
                 break;
             case Internal:
+                // no state switch required
                 break;
+        }
+    }
+
+    private void doLocalTransition(State targetState, Event event) {
+        if(mCurrentState.getDecendantStates().contains(targetState)) {
+            StateMachine stateMachine = findNextStateMachineOnPathTo(targetState);
+            stateMachine.switchState(mCurrentState, targetState, event.getPayload());
+        } else if(targetState.getDecendantStates().contains(mCurrentState)) {
+            int targetLevel = targetState.getOwner().getPath().size();
+            StateMachine stateMachine = mPath.get(targetLevel);
+            stateMachine.switchState(mCurrentState, targetState, event.getPayload());
+        } else {
+            throw new IllegalStateException("Target state is no sub state of " + mCurrentState.getId() + " therefore a local transition is not Possible.");
         }
     }
 

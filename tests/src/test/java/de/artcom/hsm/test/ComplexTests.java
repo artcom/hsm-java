@@ -76,6 +76,6 @@ public class ComplexTests {
 
     @Test
     public void complexStateMachineTest1() {
-        
+
     }
 }

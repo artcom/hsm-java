@@ -53,6 +53,27 @@ public class LocalTransitionTest {
     }
 
     @Test
+    public void canExecuteLocalTransition2() {
+        // given:
+        Action sEnter = mock(Action.class);
+        Action s1Enter = mock(Action.class);
+        State s1 = new State("s1").onEnter(s1Enter).addHandler("T1", "s2", TransitionType.External);
+        State s2 = new State("s2").addHandler("T2", "s", TransitionType.Local);
+
+        Sub s = new Sub("s", s1, s2).onEnter(sEnter);
+        StateMachine sm = new StateMachine(s);
+        sm.init();
+
+        // when:
+        sm.handleEvent("T1");
+        sm.handleEvent("T2");
+
+        // then:
+        verify(sEnter, times(1)).run();
+        verify(s1Enter, times(2)).run();
+    }
+
+    @Test
     public void cannotExecuteLocalTransition() {
         // given:
         State s1 = new State("s1");
