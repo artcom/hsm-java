@@ -45,10 +45,6 @@ public class Sub extends State<Sub> {
         }
     }
 
-    boolean handleWithCasting(Event event) {
-        return mSubMachine.handleWithCasting(event);
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -62,14 +58,6 @@ public class Sub extends State<Sub> {
     @Override
     void addParent(StateMachine stateMachine) {
         mSubMachine.addParent(stateMachine);
-    }
-
-    public String getPath() {
-        return mSubMachine.getPathString();
-    }
-
-    public StateMachine lca(State targetState) {
-        return mSubMachine.findLowestCommonAncestor(targetState);
     }
 
     @Override

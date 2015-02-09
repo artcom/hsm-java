@@ -103,4 +103,26 @@ public class GuardTest {
         verifyZeroInteractions(enterA2);
     }
 
+    @Test
+    public void createHandlerWithActionAndGuard() {
+        // given:
+        Action a1Action = mock(Action.class);
+        State a = new State("a").addHandler("T1", "a", TransitionType.Internal, a1Action, new Guard() {
+            @Override
+            public boolean evaluate(Map<String, Object> payload) {
+                return payload.containsKey("foo");
+            }
+        });
+        StateMachine sm = new StateMachine(a);
+        sm.init();
+
+        // when:
+        Map<String, Object> payload = new HashMap<String, Object>();
+        payload.put("foo", "bar");
+        sm.handleEvent("T1", payload);
+
+        // then:
+        verify(a1Action).run();
+    }
+
 }

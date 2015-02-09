@@ -14,10 +14,12 @@ import java.util.Map;
 import de.artcom.hsm.Action;
 import de.artcom.hsm.State;
 import de.artcom.hsm.StateMachine;
+import de.artcom.hsm.Sub;
 import de.artcom.hsm.TransitionType;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -235,6 +237,33 @@ public class BasicStateMachineTest {
             Assert.fail("expected IllegalStateException since target State was not part of StateMachine");
         } catch (IllegalStateException e) {
         }
+    }
+
+    @Test
+    public void canGetPathString() {
+        // given:
+        State a1 = new State("a1").addHandler("T1", "b201", TransitionType.External);
+        Sub a = new Sub("a", a1);
+        Sub foo = new Sub("foo", a);
+
+        State b201 = new State("b201");
+        Sub b21 = new Sub("b21", b201);
+        Sub b1 = new Sub("b1", b21);
+        Sub b = new Sub("b", b1);
+        Sub bar = new Sub("bar", b);
+        StateMachine sm = new StateMachine(foo, bar);
+
+        // when:
+        String pathString = sm.getPathString();
+
+        // then:
+        assertThat(pathString, notNullValue());
+    }
+
+    @Test
+    public void enumTest() {
+        // just for the code coverage (^__^)
+        TransitionType local = TransitionType.valueOf("Local");
     }
 
 //    abstract class MemoState extends State<MemoState> {

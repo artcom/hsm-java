@@ -1,16 +1,23 @@
 package de.artcom.hsm.test;
 
+
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import de.artcom.hsm.Action;
 import de.artcom.hsm.State;
 import de.artcom.hsm.StateMachine;
 import de.artcom.hsm.Sub;
 import de.artcom.hsm.TransitionType;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class LocalTransitionTest {
 
@@ -29,20 +36,60 @@ public class LocalTransitionTest {
 
     @Test
     public void canExecuteLocalTransition() {
-//        Action action = mock(Action.class);
-//        State onState = new State("on").addHandler("toggle", "on", TransitionType.Local);
-
-    }
-
-    @Test
-    public void simpleSubMachineTest() {
-        State s2 = new State("s2");
-        State s3 = new State("s3");
-        Sub s = new Sub("s", s2, s3).addHandler("T1", "s3", TransitionType.External);
-
+        // given:
+        Action sEnter = mock(Action.class);
+        Action s1Enter = mock(Action.class);
+        State s1 = new State("s1").onEnter(s1Enter);
+        Sub s = new Sub("s", s1).onEnter(sEnter).addHandler("T1", "s1", TransitionType.Local);
         StateMachine sm = new StateMachine(s);
         sm.init();
 
+        // when:
         sm.handleEvent("T1");
+
+        // then:
+        verify(sEnter, times(1)).run();
+        verify(s1Enter, times(2)).run();
     }
+
+    @Test
+    public void cannotExecuteLocalTransition() {
+        // given:
+        State s1 = new State("s1");
+        Sub s = new Sub("s", s1).addHandler("T1", "b1", TransitionType.Local);
+
+        State b1 = new State("b1");
+        Sub a = new Sub("a", s, b1);
+        StateMachine sm = new StateMachine(a);
+        sm.init();
+
+        // when:
+        try {
+            sm.handleEvent("T1");
+            Assert.fail();
+        } catch (IllegalStateException e) {
+            // then:
+        }
+
+        // then:
+    }
+
+    @Test
+    public void cannotExecuteLocalTransitionToSelf() {
+        // given:
+        State s1 = new State("s1");
+        Sub s = new Sub("s", s1).addHandler("T1", "s", TransitionType.Local);
+        StateMachine sm = new StateMachine(s);
+        sm.init();
+
+        // when:
+        try {
+            sm.handleEvent("T1");
+            Assert.fail();
+        } catch (IllegalStateException e) {
+            // then:
+        }
+
+    }
+
 }

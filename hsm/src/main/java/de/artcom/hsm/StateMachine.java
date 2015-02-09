@@ -88,34 +88,15 @@ public class StateMachine {
             //events are already processed
         } else {
             mEventQueueInProgress = true;
-            while ((mCurrentState != null) && (mEventQueue.peek() != null)) {
-                //handleWithCasting(mEventQueue.poll());
+            while (mEventQueue.peek() != null) {
                 mCurrentState.handleWithOverride(mEventQueue.poll());
             }
             mEventQueueInProgress = false;
         }
     }
 
-    boolean handleWithCasting(Event event) {
-        if (mCurrentState instanceof Sub) {
-            Sub currentSubState = (Sub) mCurrentState;
-            if (currentSubState.handleWithCasting(event)) {
-                return true;
-            }
-        }
-        Handler handler = mCurrentState.findHandler(event);
-        if (handler != null) {
-            executeHandler(handler, event);
-            return true;
-        }
-        return false;
-    }
-
     boolean handleWithOverride(Event event) {
-        if (mCurrentState != null) {
-            return mCurrentState.handleWithOverride(event);
-        }
-        return false;
+        return mCurrentState.handleWithOverride(event);
     }
 
     void executeHandler(Handler handler, Event event) {
@@ -130,10 +111,18 @@ public class StateMachine {
             handlerAction.run();
         }
 
+        StateMachine lca = findLowestCommonAncestor(targetState);
         switch (handler.getType()) {
             case External:
-                StateMachine lca = findLowestCommonAncestor(targetState);
                 lca.switchState(mCurrentState, targetState, event.getPayload());
+                break;
+            case Local:
+                if(mCurrentState.getDecendantStates().contains(targetState)) {
+                    StateMachine stateMachine = findNextStateMachineOnPathTo(targetState);
+                    stateMachine.switchState(mCurrentState, targetState, event.getPayload());
+                } else {
+                    throw new IllegalStateException("Target state is no sub state of " + mCurrentState.getId() + " therefore a local transition is not Possible.");
+                }
                 break;
             case Internal:
                 break;
@@ -165,16 +154,18 @@ public class StateMachine {
     }
 
     private State findNextStateOnPathTo(State targetState) {
+        return findNextStateMachineOnPathTo(targetState).getOrigin();
+    }
+
+    private StateMachine findNextStateMachineOnPathTo(State targetState) {
         int localLevel = mPath.size();
         StateMachine targetOwner = targetState.getOwner();
         StateMachine nextStateMachineOnPath = targetOwner.getPath().get(localLevel);
-        return nextStateMachineOnPath.getOrigin();
+        return nextStateMachineOnPath;
     }
 
     private void exitState(State previousState, State nextState, Map<String, Object> payload) {
-        if (mCurrentState != null) {
-            mCurrentState.exit(previousState, nextState, payload);
-        }
+        mCurrentState.exit(previousState, nextState, payload);
     }
 
     State getStateById(String stateId) {
