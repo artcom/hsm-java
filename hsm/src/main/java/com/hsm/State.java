@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 public class State<T extends State<T>> {
 
@@ -72,7 +73,7 @@ public class State<T extends State<T>> {
         return mId;
     }
 
-    void enter(State prev, State next) {
+    void enter(State prev, State next, Map<String, Object> payload) {
         logger.debug("enter: " + getId());
         if (mOnEnterAction != null) {
             mOnEnterAction.setPreviousState(prev);
@@ -81,7 +82,7 @@ public class State<T extends State<T>> {
         }
     }
 
-    void exit(State prev, State next) {
+    void exit(State prev, State next, Map<String, Object> payload) {
         logger.debug("exit: " + getId());
         if (mOnExitAction != null) {
             mOnExitAction.setPreviousState(prev);

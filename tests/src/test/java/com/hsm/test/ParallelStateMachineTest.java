@@ -5,6 +5,7 @@ import com.hsm.Action;
 import com.hsm.Parallel;
 import com.hsm.State;
 import com.hsm.StateMachine;
+import com.hsm.Sub;
 import com.hsm.TransitionType;
 
 import org.apache.log4j.ConsoleAppender;
@@ -16,6 +17,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InOrder;
 
+import static junit.framework.TestCase.fail;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
@@ -117,5 +119,21 @@ public class ParallelStateMachineTest {
         inOrder.verify(onEnterKeyboardOn).run();
         inOrder.verify(onEnterCapsOff).run();
         inOrder.verify(onEnterNumOff).run();
+    }
+
+    @Test
+    public void anotherParallelStateTest() {
+        State p11 = new State("p11");
+        State p21 = new State("p21");
+        State s1 = new State("s1");
+        StateMachine p1 = new StateMachine(p11);
+        StateMachine p2 = new StateMachine(p21);
+        Parallel s2 = new Parallel("s2", p1, p2);
+        Sub s = new Sub("s", s1, s2).addHandler("T1", "p21", TransitionType.External);
+
+        StateMachine sm = new StateMachine(s);
+        sm.init();
+
+        sm.handleEvent("T1");
     }
 }

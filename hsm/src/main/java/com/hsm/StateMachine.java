@@ -142,21 +142,27 @@ public class StateMachine {
 
         int targetLevel = targetState.getOwner().getPath().size();
         int localLevel = mPath.size();
+        State nextState;
         if(targetLevel < localLevel) {
-            mCurrentState = mInitialState;
+            nextState = mInitialState;
         } else if(targetLevel == localLevel) {
-            mCurrentState = targetState;
+            nextState = targetState;
         } else { // if targetLevel > localLevel
             StateMachine targetOwnerStateMachine = targetState.getOwner();
             StateMachine decendentStateMachine = targetOwnerStateMachine.getPath().get(localLevel);
-            mCurrentState = decendentStateMachine.getOrigin();
+            nextState = decendentStateMachine.getOrigin();
         }
-        mCurrentState.enter(previousState, targetState);
+        if(mStateList.contains(nextState)) {
+            mCurrentState = nextState;
+        } else {
+            mCurrentState = mInitialState;
+        }
+        mCurrentState.enter(previousState, targetState, payload);
     }
 
     private void exitState(State previousState, State nextState, Map<String, Object> payload) {
         if(mCurrentState != null) {
-            mCurrentState.exit(previousState, nextState);
+            mCurrentState.exit(previousState, nextState, payload);
         }
     }
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class Parallel extends State<Parallel> {
 
@@ -24,16 +25,16 @@ public class Parallel extends State<Parallel> {
     }
 
     @Override
-    void enter(State prev, State next) {
-        super.enter(prev, next);
+    void enter(State prev, State next, Map<String, Object> payload) {
+        super.enter(prev, next, payload);
         for (StateMachine stateMachine : mStateMachineList) {
-            stateMachine.init();
+            stateMachine.enterState(prev, next, payload);
         }
     }
 
     @Override
-    void exit(State prev, State next) {
-        super.exit(prev, next);
+    void exit(State prev, State next, Map<String, Object> payload) {
+        super.exit(prev, next, payload);
         for (StateMachine stateMachine : mStateMachineList) {
             stateMachine.teardown();
         }

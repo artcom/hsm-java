@@ -2,6 +2,6 @@ package com.hsm;
 
 public enum TransitionType {
     External,
-    //Local,
+    Local,
     Internal;
 }

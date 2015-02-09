@@ -1,6 +1,3 @@
-//plugins {
-//  id 'net.saliman.cobertura' version '2.2.5'
-//}
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'jacoco'
@@ -10,15 +7,6 @@ task jacocoReport(type:JacocoReport) {
     sourceDirectories = files(project(':hsm').sourceSets.main.java.getSrcDirs())
     executionData test
 }
-
-//cobertura {
-//    coverageDirs = [project(':hsm').sourceSets.main.output]
-//    coverageSourceDirs = [project(':hsm').sourceSets.main.java.getSrcDirs()]
-//}
-
-// test {
-//     useTestNG()
-// }
 
 dependencies {
     compile project(':hsm')
@@ -30,7 +18,6 @@ dependencies {
     testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
 
     testCompile 'junit:junit:4.12'
-    testCompile 'org.testng:testng:6.8.17'
 
     testCompile 'org.mockito:mockito-core:1.10.8'
 }

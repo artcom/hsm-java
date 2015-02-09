@@ -12,6 +12,8 @@ import com.hsm.Sub;
 
 import org.junit.*;
 import org.junit.Assert;
+
+import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.*;
 
@@ -216,6 +218,22 @@ public class BasicStateMachineTest {
         //then:
         verify(toggleAction).run();
         verifyZeroInteractions(onExitAction);
+    }
+
+    @Test
+    public void noMatchingStateAvailable() {
+        // given:
+        State on = new State("on").addHandler("toggle", "off", TransitionType.External);
+        StateMachine sm = new StateMachine(on);
+        sm.init();
+
+        // when:
+        try {
+            sm.handleEvent("toggle");
+        } catch(NullPointerException npe) {
+        // then:
+            assertTrue(true);
+        }
     }
 
 //    abstract class MemoState extends State<MemoState> {

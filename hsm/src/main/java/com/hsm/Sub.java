@@ -1,6 +1,8 @@
 package com.hsm;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Sub extends State<Sub> {
 
@@ -23,15 +25,16 @@ public class Sub extends State<Sub> {
         mSubMachine.setOrigin(this);
     }
 
-    void enter(State prev, State next) {
-        super.enter(prev, next);
-        mSubMachine.init();
-//        mSubMachine.enterState(prev, next);
+    @Override
+    void enter(State prev, State next, Map<String, Object> payload) {
+        super.enter(prev, next, payload);
+        mSubMachine.enterState(prev, next, payload);
     }
 
-    void exit(State prev, State next) {
+    @Override
+    void exit(State prev, State next, Map<String, Object> payload) {
         mSubMachine.teardown();
-        super.exit(prev, next);
+        super.exit(prev, next, payload);
     }
 
     @Override

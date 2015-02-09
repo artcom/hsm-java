@@ -1,6 +1,5 @@
 package com.hsm.test;
 
-import com.hsm.HelloWorld;
 import spock.lang.Specification;
 
 class HelloWorldSpec extends Specification {
