@@ -1,18 +1,12 @@
-package com.hsm.test;
+package de.artcom.hsm.test;
 
-import java.util.Map;
-import java.util.HashMap;
-
-import com.hsm.Action;
-import com.hsm.TransitionType;
-import com.hsm.State;
-import com.hsm.StateMachine;
-import com.hsm.Sub;
+import de.artcom.hsm.Action;
+import de.artcom.hsm.TransitionType;
+import de.artcom.hsm.State;
+import de.artcom.hsm.StateMachine;
+import de.artcom.hsm.Sub;
 
 import org.junit.*;
-import org.junit.Assert;
-import static org.hamcrest.Matchers.*;
-import static org.hamcrest.MatcherAssert.*;
 
 import static org.mockito.Mockito.*;
 import org.mockito.InOrder;

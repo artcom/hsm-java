@@ -1,10 +1,9 @@
-package com.hsm.test;
+package de.artcom.hsm.test;
 
-import com.hsm.Action;
-import com.hsm.State;
-import com.hsm.StateMachine;
-import com.hsm.Sub;
-import com.hsm.TransitionType;
+import de.artcom.hsm.State;
+import de.artcom.hsm.StateMachine;
+import de.artcom.hsm.Sub;
+import de.artcom.hsm.TransitionType;
 
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;

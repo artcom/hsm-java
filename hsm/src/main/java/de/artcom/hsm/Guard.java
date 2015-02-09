@@ -1,4 +1,4 @@
-package com.hsm;
+package de.artcom.hsm;
 
 import java.util.Map;
 

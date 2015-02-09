@@ -1,7 +1,6 @@
-package com.hsm;
+package de.artcom.hsm;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Sub extends State<Sub> {
