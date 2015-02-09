@@ -20,6 +20,7 @@ import org.mockito.InOrder;
 import static junit.framework.TestCase.fail;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class ParallelStateMachineTest {
 
@@ -123,8 +124,11 @@ public class ParallelStateMachineTest {
 
     @Test
     public void anotherParallelStateTest() {
-        State p11 = new State("p11");
-        State p21 = new State("p21");
+        // given:
+        Action p11Enter = mock(Action.class);
+        Action p21Enter = mock(Action.class);
+        State p11 = new State("p11").onEnter(p11Enter);
+        State p21 = new State("p21").onEnter(p21Enter);
         State s1 = new State("s1");
         StateMachine p1 = new StateMachine(p11);
         StateMachine p2 = new StateMachine(p21);
@@ -134,6 +138,11 @@ public class ParallelStateMachineTest {
         StateMachine sm = new StateMachine(s);
         sm.init();
 
+        // when:
         sm.handleEvent("T1");
+
+        // then:
+        verify(p11Enter).run();
+        verify(p21Enter).run();
     }
 }

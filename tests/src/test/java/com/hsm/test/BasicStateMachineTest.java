@@ -1,29 +1,28 @@
 package com.hsm.test;
 
-import java.util.Map;
-import java.util.HashMap;
-
 import com.hsm.Action;
-import com.hsm.Guard;
-import com.hsm.TransitionType;
 import com.hsm.State;
 import com.hsm.StateMachine;
-import com.hsm.Sub;
+import com.hsm.TransitionType;
 
-import org.junit.*;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static junit.framework.TestCase.assertTrue;
-import static org.hamcrest.Matchers.*;
-import static org.hamcrest.MatcherAssert.*;
-
-import static org.mockito.Mockito.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.spockframework.util.Assert.fail;
-
-import org.apache.log4j.Logger;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.Level;
 
 public class BasicStateMachineTest {
 
@@ -230,6 +229,7 @@ public class BasicStateMachineTest {
         // when:
         try {
             sm.handleEvent("toggle");
+            Assert.fail();
         } catch(NullPointerException npe) {
         // then:
             assertTrue(true);
