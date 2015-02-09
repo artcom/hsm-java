@@ -112,14 +112,14 @@ public class State<T extends State<T>> {
 
     @Override
     public String toString() {
-        return mId.toString();
+        return mId;
     }
 
     void addParent(StateMachine stateMachine) {
         // do nothing
     }
 
-    Collection<? extends State> getDecendantStates() {
+    Collection<? extends State> getDescendantStates() {
         return new ArrayList<State>();
     }
 }

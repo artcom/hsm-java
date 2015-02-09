@@ -47,12 +47,7 @@ public class Sub extends State<Sub> {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getId());
-        sb.append("/(");
-        sb.append(mSubMachine.toString());
-        sb.append(")");
-        return sb.toString();
+        return getId() + "/(" + mSubMachine.toString() + ")";
     }
 
     @Override
@@ -61,8 +56,8 @@ public class Sub extends State<Sub> {
     }
 
     @Override
-    Collection<? extends State> getDecendantStates() {
-        return mSubMachine.getDecendantStates();
+    Collection<? extends State> getDescendantStates() {
+        return mSubMachine.getDescendantStates();
     }
 
 }

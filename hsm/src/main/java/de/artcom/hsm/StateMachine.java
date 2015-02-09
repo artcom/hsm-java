@@ -16,7 +16,7 @@ public class StateMachine {
 
     private final List<State> mStateList;
 
-    private final List<State> mDecendantStateList = new ArrayList<State>();
+    private final List<State> mDescendantStateList = new ArrayList<State>();
 
     private State mInitialState = null;
 
@@ -38,7 +38,7 @@ public class StateMachine {
         }
         setOwner();
         generatePath();
-        generateDecendantStateList();
+        generateDescendantStateList();
     }
 
     void setOrigin(State origin) {
@@ -49,10 +49,10 @@ public class StateMachine {
         return mOrigin;
     }
 
-    private void generateDecendantStateList() {
-        mDecendantStateList.addAll(mStateList);
+    private void generateDescendantStateList() {
+        mDescendantStateList.addAll(mStateList);
         for (State state : mStateList) {
-            mDecendantStateList.addAll(state.getDecendantStates());
+            mDescendantStateList.addAll(state.getDescendantStates());
         }
     }
 
@@ -126,10 +126,10 @@ public class StateMachine {
     }
 
     private void doLocalTransition(State targetState, Event event) {
-        if(mCurrentState.getDecendantStates().contains(targetState)) {
+        if(mCurrentState.getDescendantStates().contains(targetState)) {
             StateMachine stateMachine = findNextStateMachineOnPathTo(targetState);
             stateMachine.switchState(mCurrentState, targetState, event.getPayload());
-        } else if(targetState.getDecendantStates().contains(mCurrentState)) {
+        } else if(targetState.getDescendantStates().contains(mCurrentState)) {
             int targetLevel = targetState.getOwner().getPath().size();
             StateMachine stateMachine = mPath.get(targetLevel);
             stateMachine.switchState(mCurrentState, targetState, event.getPayload());
@@ -182,7 +182,7 @@ public class StateMachine {
         if (!stateMachine.equals(this)) {
             return stateMachine.getStateById(stateId);
         }
-        for (State state : mDecendantStateList) {
+        for (State state : mDescendantStateList) {
             if (state.getId().equals(stateId)) {
                 return state;
             }
@@ -247,8 +247,8 @@ public class StateMachine {
         return this;
     }
 
-    List<State> getDecendantStates() {
-        return mDecendantStateList;
+    List<State> getDescendantStates() {
+        return mDescendantStateList;
     }
 
 }

@@ -76,11 +76,11 @@ public class Parallel extends State<Parallel> {
     }
 
     @Override
-    Collection<? extends State> getDecendantStates() {
-        List<State> decendantStates = new ArrayList<State>();
+    Collection<? extends State> getDescendantStates() {
+        List<State> descendantStates = new ArrayList<State>();
         for (StateMachine stateMachine : mStateMachineList) {
-            decendantStates.addAll(stateMachine.getDecendantStates());
+            descendantStates.addAll(stateMachine.getDescendantStates());
         }
-        return decendantStates;
+        return descendantStates;
     }
 }
