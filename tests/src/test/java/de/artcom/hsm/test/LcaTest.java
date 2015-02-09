@@ -108,16 +108,4 @@ public class LcaTest {
         inOrder.verify(enterB201).run();
     }
 
-    @Test
-    public void simpleSubMachineTest() {
-        State s2 = new State("s2");
-        State s3 = new State("s3");
-        Sub s = new Sub("s", s2, s3).addHandler("T1", "s3", TransitionType.External);
-
-        StateMachine sm = new StateMachine(s);
-        sm.init();
-
-        sm.handleEvent("T1");
-    }
-
 }

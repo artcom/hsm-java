@@ -40,11 +40,16 @@ public class BasicStateMachineTest {
     }
 
     @Test
-    public void canCreateEmptyStateMachine() {
+    public void cannotInitEmptyStateMachine() {
+        // given:
         StateMachine sm = new StateMachine();
-        sm.init();
-        sm.handleEvent("foo");
-        sm.teardown();
+
+        // when:
+        try {
+            sm.init();
+            Assert.fail("IllegalStateException should raise when initing a empty StateMachine");
+        } catch (IllegalStateException e) {
+        }
     }
 
     @Test
@@ -116,8 +121,8 @@ public class BasicStateMachineTest {
         // when:
         try {
             sm.handleEvent("toggle");
-            fail("expected NullpointerException but nothing happnend");
-        } catch (NullPointerException npe) {
+            Assert.fail("expected NullpointerException but nothing happnend");
+        } catch (IllegalStateException npe) {
         }
     }
 
@@ -229,10 +234,8 @@ public class BasicStateMachineTest {
         // when:
         try {
             sm.handleEvent("toggle");
-            Assert.fail();
-        } catch(NullPointerException npe) {
-        // then:
-            assertTrue(true);
+            Assert.fail("expected IllegalStateException since target State was not part of StateMachine");
+        } catch(IllegalStateException e) {
         }
     }
 

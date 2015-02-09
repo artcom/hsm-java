@@ -59,7 +59,11 @@ public class StateMachine {
 
     public void init() {
         logger.debug("init");
-        enterState(null, mInitialState, new HashMap<String, Object>());
+        if(mInitialState != null) {
+            enterState(null, mInitialState, new HashMap<String, Object>());
+        } else {
+            throw new IllegalStateException("Can't init without states defined.");
+        }
     }
 
     public void teardown() {
@@ -136,9 +140,6 @@ public class StateMachine {
     }
 
     void enterState(State previousState, State targetState, Map<String, Object> payload) {
-        if(targetState == null) {
-            return;
-        }
         int targetLevel = targetState.getOwner().getPath().size();
         int localLevel = mPath.size();
         State nextState;
@@ -180,7 +181,7 @@ public class StateMachine {
                 return state;
             }
         }
-        return null; // TODO: throw exception here!
+        throw new IllegalStateException("cant find State with ID: " + stateId + " in " + toString());
     }
 
     private void setOwner() {
