@@ -1,10 +1,5 @@
 package de.artcom.hsm.test;
 
-import de.artcom.hsm.State;
-import de.artcom.hsm.StateMachine;
-import de.artcom.hsm.Sub;
-import de.artcom.hsm.TransitionType;
-
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -12,7 +7,10 @@ import org.apache.log4j.PatternLayout;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static org.mockito.Mockito.mock;
+import de.artcom.hsm.State;
+import de.artcom.hsm.StateMachine;
+import de.artcom.hsm.Sub;
+import de.artcom.hsm.TransitionType;
 
 public class LocalTransitionTest {
 

@@ -1,13 +1,6 @@
 package de.artcom.hsm.test;
 
 
-import de.artcom.hsm.Action;
-import de.artcom.hsm.Parallel;
-import de.artcom.hsm.State;
-import de.artcom.hsm.StateMachine;
-import de.artcom.hsm.Sub;
-import de.artcom.hsm.TransitionType;
-
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -16,7 +9,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.InOrder;
 
-import static junit.framework.TestCase.fail;
+import de.artcom.hsm.Action;
+import de.artcom.hsm.Parallel;
+import de.artcom.hsm.State;
+import de.artcom.hsm.StateMachine;
+import de.artcom.hsm.Sub;
+import de.artcom.hsm.TransitionType;
+
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -39,12 +38,12 @@ public class ParallelStateMachineTest {
     @Test
     public void canCreateParallelState() {
         // given:
-        State capsOn    = new State("caps_on");
-        State capsOff   = new State("caps_off");
+        State capsOn = new State("caps_on");
+        State capsOff = new State("caps_off");
         StateMachine capsStateMachine = new StateMachine(capsOff, capsOn);
 
-        State numOn     = new State("num_on");
-        State numOff    = new State("num_off");
+        State numOn = new State("num_on");
+        State numOff = new State("num_off");
         StateMachine numStateMachine = new StateMachine(numOff, numOn);
 
         Parallel keyboardOn = new Parallel("keyboard_on", capsStateMachine, numStateMachine);
@@ -62,25 +61,25 @@ public class ParallelStateMachineTest {
     @Test
     public void canSwitchStatesInParallel() {
         // given:
-        Action onEnterCapsOn        = mock(Action.class);
-        Action onEnterCapsOff       = mock(Action.class);
-        Action onEnterNumOn         = mock(Action.class);
-        Action onEnterNumOff        = mock(Action.class);
-        Action onEnterKeyboardOn    = mock(Action.class);
-        Action onEnterKeyboardOff   = mock(Action.class);
+        Action onEnterCapsOn = mock(Action.class);
+        Action onEnterCapsOff = mock(Action.class);
+        Action onEnterNumOn = mock(Action.class);
+        Action onEnterNumOff = mock(Action.class);
+        Action onEnterKeyboardOn = mock(Action.class);
+        Action onEnterKeyboardOff = mock(Action.class);
 
-        State capsOn    = new State("caps_on")
+        State capsOn = new State("caps_on")
                 .onEnter(onEnterCapsOn)
                 .addHandler("capslock", "caps_off", TransitionType.External);
-        State capsOff   = new State("caps_off")
+        State capsOff = new State("caps_off")
                 .onEnter(onEnterCapsOff)
                 .addHandler("capslock", "caps_on", TransitionType.External);
         StateMachine capsStateMachine = new StateMachine(capsOff, capsOn);
 
-        State numOn     = new State("num_on")
+        State numOn = new State("num_on")
                 .onEnter(onEnterNumOn)
                 .addHandler("numlock", "num_off", TransitionType.External);
-        State numOff    = new State("num_off")
+        State numOff = new State("num_off")
                 .onEnter(onEnterNumOff)
                 .addHandler("numlock", "num_on", TransitionType.External);
         StateMachine numStateMachine = new StateMachine(numOff, numOn);
@@ -88,7 +87,7 @@ public class ParallelStateMachineTest {
         Parallel keyboardOn = new Parallel("keyboard_on", capsStateMachine, numStateMachine)
                 .onEnter(onEnterKeyboardOn)
                 .addHandler("unplug", "keyboard_off", TransitionType.External);
-        State keyboardOff   = new State("keyboard_off")
+        State keyboardOff = new State("keyboard_off")
                 .onEnter(onEnterKeyboardOff)
                 .addHandler("plug", "keyboard_on", TransitionType.External);
         StateMachine sm = new StateMachine(keyboardOff, keyboardOn);
@@ -105,8 +104,8 @@ public class ParallelStateMachineTest {
         sm.handleEvent("plug");
 
         // then:
-        InOrder inOrder = inOrder(onEnterCapsOff,    onEnterCapsOn, onEnterKeyboardOff,
-                                  onEnterKeyboardOn, onEnterNumOff, onEnterNumOn);
+        InOrder inOrder = inOrder(onEnterCapsOff, onEnterCapsOn, onEnterKeyboardOff,
+                onEnterKeyboardOn, onEnterNumOff, onEnterNumOn);
 
         inOrder.verify(onEnterKeyboardOff).run();
         inOrder.verify(onEnterKeyboardOn).run();

@@ -1,34 +1,40 @@
 package de.artcom.hsm;
 
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Queue;
-
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import org.apache.log4j.Logger;
 
 public class StateMachine {
 
     final static Logger logger = Logger.getLogger(StateMachine.class);
 
     private final List<State> mStateList;
+
     private final List<State> mDecendantStateList = new ArrayList<State>();
+
     private State mInitialState = null;
+
     private State mCurrentState;
+
     private final Queue<Event> mEventQueue = new ConcurrentLinkedQueue<Event>();
+
     private boolean mEventQueueInProgress = false;
+
     private final List<StateMachine> mPath = new ArrayList<StateMachine>();
+
     private State mOrigin;
 
 
     public StateMachine(State... states) {
         mStateList = Arrays.asList(states);
         if (!mStateList.isEmpty()) {
-            mInitialState = mStateList.get(0); 
+            mInitialState = mStateList.get(0);
         }
         setOwner();
         generatePath();
@@ -45,21 +51,21 @@ public class StateMachine {
 
     private void generateDecendantStateList() {
         mDecendantStateList.addAll(mStateList);
-        for(State state : mStateList) {
+        for (State state : mStateList) {
             mDecendantStateList.addAll(state.getDecendantStates());
         }
     }
 
     private void generatePath() {
         mPath.add(0, this);
-        for(State state : mStateList) {
+        for (State state : mStateList) {
             state.addParent(this);
         }
     }
 
     public void init() {
         logger.debug("init");
-        if(mInitialState != null) {
+        if (mInitialState != null) {
             enterState(null, mInitialState, new HashMap<String, Object>());
         } else {
             throw new IllegalStateException("Can't init without states defined.");
@@ -77,12 +83,12 @@ public class StateMachine {
 
     public void handleEvent(String eventName, Map<String, Object> payload) {
         mEventQueue.add(new Event(eventName, payload));
-        logger.debug("handleEvent: "+ eventName);
+        logger.debug("handleEvent: " + eventName);
         if (mEventQueueInProgress) {
             //events are already processed
         } else {
             mEventQueueInProgress = true;
-            while( (mCurrentState != null) && (mEventQueue.peek() != null) ) {
+            while ((mCurrentState != null) && (mEventQueue.peek() != null)) {
                 //handleWithCasting(mEventQueue.poll());
                 mCurrentState.handleWithOverride(mEventQueue.poll());
             }
@@ -92,8 +98,8 @@ public class StateMachine {
 
     boolean handleWithCasting(Event event) {
         if (mCurrentState instanceof Sub) {
-            Sub currentSubState = (Sub)mCurrentState;
-            if( currentSubState.handleWithCasting(event)) {
+            Sub currentSubState = (Sub) mCurrentState;
+            if (currentSubState.handleWithCasting(event)) {
                 return true;
             }
         }
@@ -106,7 +112,7 @@ public class StateMachine {
     }
 
     boolean handleWithOverride(Event event) {
-        if(mCurrentState != null) {
+        if (mCurrentState != null) {
             return mCurrentState.handleWithOverride(event);
         }
         return false;
@@ -124,7 +130,7 @@ public class StateMachine {
             handlerAction.run();
         }
 
-        switch(handler.getType()) {
+        switch (handler.getType()) {
             case External:
                 StateMachine lca = findLowestCommonAncestor(targetState);
                 lca.switchState(mCurrentState, targetState, event.getPayload());
@@ -143,14 +149,14 @@ public class StateMachine {
         int targetLevel = targetState.getOwner().getPath().size();
         int localLevel = mPath.size();
         State nextState;
-        if(targetLevel < localLevel) {
+        if (targetLevel < localLevel) {
             nextState = mInitialState;
-        } else if(targetLevel == localLevel) {
+        } else if (targetLevel == localLevel) {
             nextState = targetState;
         } else { // if targetLevel > localLevel
             nextState = findNextStateOnPathTo(targetState);
         }
-        if(mStateList.contains(nextState)) {
+        if (mStateList.contains(nextState)) {
             mCurrentState = nextState;
         } else {
             mCurrentState = mInitialState;
@@ -166,17 +172,17 @@ public class StateMachine {
     }
 
     private void exitState(State previousState, State nextState, Map<String, Object> payload) {
-        if(mCurrentState != null) {
+        if (mCurrentState != null) {
             mCurrentState.exit(previousState, nextState, payload);
         }
     }
 
     State getStateById(String stateId) {
         StateMachine stateMachine = mPath.get(0);
-        if(!stateMachine.equals(this)) {
+        if (!stateMachine.equals(this)) {
             return stateMachine.getStateById(stateId);
         }
-        for (State state: mDecendantStateList) {
+        for (State state : mDecendantStateList) {
             if (state.getId().equals(stateId)) {
                 return state;
             }
@@ -185,14 +191,14 @@ public class StateMachine {
     }
 
     private void setOwner() {
-        for (State state: mStateList) {
+        for (State state : mStateList) {
             state.setOwner(this);
         }
     }
 
     @Override
     public String toString() {
-        if(mCurrentState == null) {
+        if (mCurrentState == null) {
             return mInitialState.toString();
         }
         return mCurrentState.toString();
@@ -206,7 +212,7 @@ public class StateMachine {
         StringBuilder sb = new StringBuilder();
         int count = 0;
         sb.append("\r\n");
-        for(StateMachine stateMachine : mPath) {
+        for (StateMachine stateMachine : mPath) {
             sb.append(Integer.toString(++count));
             sb.append(" ");
             sb.append(stateMachine.toString());
@@ -218,7 +224,7 @@ public class StateMachine {
     public void addParent(StateMachine stateMachine) {
         logger.debug("addParent " + stateMachine.toString());
         mPath.add(0, stateMachine);
-        for(State state : mStateList) {
+        for (State state : mStateList) {
             state.addParent(stateMachine);
         }
     }
@@ -231,7 +237,7 @@ public class StateMachine {
             try {
                 StateMachine targetAncestor = targetPath.get(i);
                 StateMachine localAncestor = mPath.get(i);
-                if(!targetAncestor.equals(localAncestor)) {
+                if (!targetAncestor.equals(localAncestor)) {
                     return mPath.get(i - 1);
                 }
             } catch (IndexOutOfBoundsException e) {

@@ -3,8 +3,11 @@ package de.artcom.hsm;
 class Handler {
 
     private final String mTargetStateId;
+
     private final TransitionType mType;
+
     private Guard mGuard = null;
+
     private Action mAction = null;
 
     public Handler(String targetStateId, TransitionType type, Action action, Guard guard) {
@@ -32,7 +35,7 @@ class Handler {
     }
 
     public boolean evaluate(Event event) {
-        if(mGuard != null) {
+        if (mGuard != null) {
             return mGuard.evaluate(event.getPayload());
         }
         return true;

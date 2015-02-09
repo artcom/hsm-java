@@ -1,11 +1,5 @@
 package de.artcom.hsm.test;
 
-import de.artcom.hsm.Action;
-import de.artcom.hsm.State;
-import de.artcom.hsm.StateMachine;
-import de.artcom.hsm.Sub;
-import de.artcom.hsm.TransitionType;
-
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -13,6 +7,12 @@ import org.apache.log4j.PatternLayout;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.InOrder;
+
+import de.artcom.hsm.Action;
+import de.artcom.hsm.State;
+import de.artcom.hsm.StateMachine;
+import de.artcom.hsm.Sub;
+import de.artcom.hsm.TransitionType;
 
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -49,7 +49,7 @@ public class LcaTest {
         Action enterBar = mock(Action.class);
         State b201 = new State("b201").onEnter(enterB201);
         Sub b21 = new Sub("b21", b201).onEnter(enterB21);
-        Sub b1 = new Sub("b1",b21).onEnter(enterB1);
+        Sub b1 = new Sub("b1", b21).onEnter(enterB1);
         Sub b = new Sub("b", b1).onEnter(enterB);
         Sub bar = new Sub("bar", b).onEnter(enterBar);
         StateMachine sm = new StateMachine(foo, bar);
@@ -87,7 +87,7 @@ public class LcaTest {
         Action enterBar = mock(Action.class);
         State b201 = new State("b201").onEnter(enterB201);
         Sub b21 = new Sub("b21", b201).onEnter(enterB21);
-        Sub b1 = new Sub("b1",b21).onEnter(enterB1);
+        Sub b1 = new Sub("b1", b21).onEnter(enterB1);
         Sub b = new Sub("b", b1).onEnter(enterB);
         Sub bar = new Sub("bar", b).onEnter(enterBar);
         StateMachine sm = new StateMachine(foo, bar);

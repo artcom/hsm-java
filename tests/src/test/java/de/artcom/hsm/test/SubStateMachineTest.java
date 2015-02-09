@@ -1,20 +1,21 @@
 package de.artcom.hsm.test;
 
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.mockito.InOrder;
+
 import de.artcom.hsm.Action;
-import de.artcom.hsm.TransitionType;
 import de.artcom.hsm.State;
 import de.artcom.hsm.StateMachine;
 import de.artcom.hsm.Sub;
+import de.artcom.hsm.TransitionType;
 
-import org.junit.*;
-
-import static org.mockito.Mockito.*;
-import org.mockito.InOrder;
-
-import org.apache.log4j.Logger;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.Level;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
 
 public class SubStateMachineTest {
 
@@ -24,7 +25,7 @@ public class SubStateMachineTest {
     public static void setupLogger() {
         ConsoleAppender console = new ConsoleAppender();
         String pattern = "%d [%p] %C{1}.%M: %m%n";
-        console.setLayout(new PatternLayout(pattern)); 
+        console.setLayout(new PatternLayout(pattern));
         console.setThreshold(Level.ALL);
         console.activateOptions();
         Logger.getRootLogger().removeAllAppenders();
@@ -53,17 +54,17 @@ public class SubStateMachineTest {
         Action onEnterOn = mock(Action.class);
         Action onEnterOff = mock(Action.class);
         State loud = new State("loud")
-            .addHandler("volume_down", "quiet", TransitionType.External)
-            .onEnter(onEnterLoud);
+                .addHandler("volume_down", "quiet", TransitionType.External)
+                .onEnter(onEnterLoud);
         State quiet = new State("quiet")
-            .addHandler("volume_up", "loud", TransitionType.External)
-            .onEnter(onEnterQuiet);
+                .addHandler("volume_up", "loud", TransitionType.External)
+                .onEnter(onEnterQuiet);
         Sub on = new Sub("on", new StateMachine(quiet, loud))
-            .addHandler("switched_off", "off", TransitionType.External)
-            .onEnter(onEnterOn);
+                .addHandler("switched_off", "off", TransitionType.External)
+                .onEnter(onEnterOn);
         State off = new State("off")
-            .addHandler("switched_on", "on", TransitionType.External)
-            .onEnter(onEnterOff);
+                .addHandler("switched_on", "on", TransitionType.External)
+                .onEnter(onEnterOff);
         StateMachine sm = new StateMachine(off, on);
         sm.init();
 

@@ -1,11 +1,5 @@
 package de.artcom.hsm.test;
 
-import de.artcom.hsm.Action;
-import de.artcom.hsm.Guard;
-import de.artcom.hsm.State;
-import de.artcom.hsm.StateMachine;
-import de.artcom.hsm.TransitionType;
-
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -15,6 +9,12 @@ import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import de.artcom.hsm.Action;
+import de.artcom.hsm.Guard;
+import de.artcom.hsm.State;
+import de.artcom.hsm.StateMachine;
+import de.artcom.hsm.TransitionType;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

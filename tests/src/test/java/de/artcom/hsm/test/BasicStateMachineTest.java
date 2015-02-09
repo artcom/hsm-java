@@ -1,10 +1,5 @@
 package de.artcom.hsm.test;
 
-import de.artcom.hsm.Action;
-import de.artcom.hsm.State;
-import de.artcom.hsm.StateMachine;
-import de.artcom.hsm.TransitionType;
-
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -16,13 +11,16 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static junit.framework.TestCase.assertTrue;
+import de.artcom.hsm.Action;
+import de.artcom.hsm.State;
+import de.artcom.hsm.StateMachine;
+import de.artcom.hsm.TransitionType;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.spockframework.util.Assert.fail;
 
 public class BasicStateMachineTest {
 
@@ -32,7 +30,7 @@ public class BasicStateMachineTest {
     public static void setupLogger() {
         ConsoleAppender console = new ConsoleAppender();
         String pattern = "%d [%p] %C{1}.%M: %m%n";
-        console.setLayout(new PatternLayout(pattern)); 
+        console.setLayout(new PatternLayout(pattern));
         console.setThreshold(Level.ALL);
         console.activateOptions();
         Logger.getRootLogger().removeAllAppenders();
@@ -55,8 +53,8 @@ public class BasicStateMachineTest {
     @Test
     public void canChainMethods() {
         State state = new State("foo")
-            .onEnter(mock(Action.class))
-            .onExit(mock(Action.class));
+                .onEnter(mock(Action.class))
+                .onExit(mock(Action.class));
     }
 
     @Test
@@ -77,7 +75,7 @@ public class BasicStateMachineTest {
         //given:
         Action exitAction = mock(Action.class);
         State on = new State("on")
-            .onExit(exitAction);
+                .onExit(exitAction);
         StateMachine sm = new StateMachine(on);
         sm.init();
         //when:
@@ -91,11 +89,11 @@ public class BasicStateMachineTest {
         //given:
         Action onExitAction = mock(Action.class);
         State on = new State("on")
-            .addHandler("toggle", "off", TransitionType.External)
-            .onExit(onExitAction);
+                .addHandler("toggle", "off", TransitionType.External)
+                .onExit(onExitAction);
         Action offEnterAction = mock(Action.class);
         State off = new State("off")
-            .onEnter(offEnterAction);
+                .onEnter(offEnterAction);
         StateMachine sm = new StateMachine(on, off);
         sm.init();
 
@@ -112,8 +110,8 @@ public class BasicStateMachineTest {
         // given:
         Action onExitAction = mock(Action.class);
         State on = new State("on")
-            .addHandler("toggle", "off", TransitionType.External)
-            .onExit(onExitAction);
+                .addHandler("toggle", "off", TransitionType.External)
+                .onExit(onExitAction);
         Action offEnterAction = mock(Action.class);
         StateMachine sm = new StateMachine(on);
         sm.init();
@@ -131,11 +129,11 @@ public class BasicStateMachineTest {
         //given:
         Action onExitAction = mock(Action.class);
         State on = new State("on")
-            .addHandler("toggle", "off", TransitionType.External)
-            .onExit(onExitAction);
+                .addHandler("toggle", "off", TransitionType.External)
+                .onExit(onExitAction);
         Action offEnterAction = mock(Action.class);
         State off = new State("off")
-            .onEnter(offEnterAction);
+                .onEnter(offEnterAction);
         StateMachine sm = new StateMachine(on, off);
         sm.init();
 
@@ -150,7 +148,7 @@ public class BasicStateMachineTest {
     @Test
     public void actionsAreCalledOnTransitionsWithPayload() {
         //given:
-        final boolean[] actionGotCalled = { false };
+        final boolean[] actionGotCalled = {false};
         Action toggleAction = new Action() {
             @Override
             public void run() {
@@ -158,11 +156,11 @@ public class BasicStateMachineTest {
                 assertThat(mPayload, notNullValue());
                 Assert.assertTrue(mPayload.containsKey("foo"));
                 Assert.assertTrue(mPayload.get("foo") instanceof String);
-                Assert.assertTrue(((String)mPayload.get("foo")).equals("bar"));
+                Assert.assertTrue(((String) mPayload.get("foo")).equals("bar"));
             }
         };
         State on = new State("on")
-            .addHandler("toggle", "off", TransitionType.External, toggleAction);
+                .addHandler("toggle", "off", TransitionType.External, toggleAction);
         State off = new State("off");
         StateMachine sm = new StateMachine(on, off);
         sm.init();
@@ -181,7 +179,7 @@ public class BasicStateMachineTest {
     @Test
     public void actionsAreCalledAlwaysWithValidPayload() {
         //given:
-        final boolean[] actionGotCalled = { false };
+        final boolean[] actionGotCalled = {false};
         Action toggleAction = new Action() {
             @Override
             public void run() {
@@ -191,7 +189,7 @@ public class BasicStateMachineTest {
             }
         };
         State on = new State("on")
-            .addHandler("toggle", "off", TransitionType.External, toggleAction);
+                .addHandler("toggle", "off", TransitionType.External, toggleAction);
         State off = new State("off");
         StateMachine sm = new StateMachine(on, off);
         sm.init();
@@ -211,8 +209,8 @@ public class BasicStateMachineTest {
         Action onExitAction = mock(Action.class);
         Action toggleAction = mock(Action.class);
         State on = new State("on")
-            .addHandler("toggle", "on", TransitionType.Internal, toggleAction)
-            .onExit(onExitAction);
+                .addHandler("toggle", "on", TransitionType.Internal, toggleAction)
+                .onExit(onExitAction);
         StateMachine sm = new StateMachine(on);
         sm.init();
 
@@ -235,7 +233,7 @@ public class BasicStateMachineTest {
         try {
             sm.handleEvent("toggle");
             Assert.fail("expected IllegalStateException since target State was not part of StateMachine");
-        } catch(IllegalStateException e) {
+        } catch (IllegalStateException e) {
         }
     }
 

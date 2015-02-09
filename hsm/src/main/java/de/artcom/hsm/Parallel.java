@@ -14,7 +14,7 @@ public class Parallel extends State<Parallel> {
     public Parallel(String id, StateMachine... stateMachines) {
         super(id);
         mStateMachineList = Arrays.asList(stateMachines);
-        for(StateMachine stateMachine: mStateMachineList) {
+        for (StateMachine stateMachine : mStateMachineList) {
             stateMachine.setOrigin(this);
         }
     }

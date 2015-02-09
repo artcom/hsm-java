@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'jacoco'
 
-task jacocoReport(type:JacocoReport) {
+task jacocoReport(type: JacocoReport) {
     classDirectories = files(project(':hsm').sourceSets.main.output)
     sourceDirectories = files(project(':hsm').sourceSets.main.java.getSrcDirs())
     executionData test
