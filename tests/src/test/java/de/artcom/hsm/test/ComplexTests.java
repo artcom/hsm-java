@@ -1,11 +1,6 @@
 package de.artcom.hsm.test;
 
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.artcom.hsm.Parallel;
@@ -14,8 +9,6 @@ import de.artcom.hsm.StateMachine;
 import de.artcom.hsm.Sub;
 
 public class ComplexTests {
-
-    final static Logger LOGGER = Logger.getLogger(BasicStateMachineTest.class);
 
     private State a1;
     private State a2;
@@ -37,18 +30,6 @@ public class ComplexTests {
     private Parallel c;
 
     private StateMachine stateMachine;
-
-
-    @BeforeClass
-    public static void setupLogger() {
-        ConsoleAppender console = new ConsoleAppender();
-        String pattern = "%d [%p] %C{1}.%M: %m%n";
-        console.setLayout(new PatternLayout(pattern));
-        console.setThreshold(Level.ALL);
-        console.activateOptions();
-        Logger.getRootLogger().removeAllAppenders();
-        Logger.getRootLogger().addAppender(console);
-    }
 
     @Before
     public void setUpTest() {

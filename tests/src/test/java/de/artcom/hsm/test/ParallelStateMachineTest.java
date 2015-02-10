@@ -1,11 +1,5 @@
 package de.artcom.hsm.test;
 
-
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.InOrder;
 
@@ -21,19 +15,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 public class ParallelStateMachineTest {
-
-    final static Logger LOGGER = Logger.getLogger(ParallelStateMachineTest.class);
-
-    @BeforeClass
-    public static void setupLogger() {
-        ConsoleAppender console = new ConsoleAppender();
-        String pattern = "%d [%p] %C{1}.%M: %m%n";
-        console.setLayout(new PatternLayout(pattern));
-        console.setThreshold(Level.ALL);
-        console.activateOptions();
-        Logger.getRootLogger().removeAllAppenders();
-        Logger.getRootLogger().addAppender(console);
-    }
 
     @Test
     public void canCreateParallelState() {
@@ -51,7 +32,7 @@ public class ParallelStateMachineTest {
 
         // when:
         sm.init();
-        LOGGER.debug(sm.toString());
+        System.out.println(sm.toString());
 
         // then:
         // no exception

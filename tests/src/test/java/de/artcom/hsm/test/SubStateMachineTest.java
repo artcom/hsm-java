@@ -1,10 +1,5 @@
 package de.artcom.hsm.test;
 
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.InOrder;
 
@@ -18,19 +13,6 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
 public class SubStateMachineTest {
-
-    final static Logger LOGGER = Logger.getLogger(SubStateMachineTest.class);
-
-    @BeforeClass
-    public static void setupLogger() {
-        ConsoleAppender console = new ConsoleAppender();
-        String pattern = "%d [%p] %C{1}.%M: %m%n";
-        console.setLayout(new PatternLayout(pattern));
-        console.setThreshold(Level.ALL);
-        console.activateOptions();
-        Logger.getRootLogger().removeAllAppenders();
-        Logger.getRootLogger().addAppender(console);
-    }
 
     @Test
     public void canCreateSubStateMachine() {
