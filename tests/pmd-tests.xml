@@ -15,7 +15,10 @@
   <rule ref="rulesets/java/imports.xml"/>
   <rule ref="rulesets/java/junit.xml"/>
   <rule ref="rulesets/java/naming.xml"/>
-  <rule ref="rulesets/java/optimizations.xml"/>
+  <rule ref="rulesets/java/optimizations.xml">
+    <exclude name="LocalVariableCouldBeFinal"/>
+    <exclude name="MethodArgumentCouldBeFinal"/>
+  </rule>
   <rule ref="rulesets/java/strictexception.xml"/>
   <rule ref="rulesets/java/strings.xml"/>
   <rule ref="rulesets/java/sunsecure.xml"/>
