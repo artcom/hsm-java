@@ -1,11 +1,18 @@
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'jacoco'
+apply plugin: 'pmd'
 
 task jacocoReport(type: JacocoReport) {
     classDirectories = files(project(':hsm').sourceSets.main.output)
     sourceDirectories = files(project(':hsm').sourceSets.main.java.getSrcDirs())
     executionData test
+}
+
+pmd {
+    toolVersion = '5.1.3'
+    ignoreFailures = true
+    ruleSetFiles = files("${projectDir}/pmd-tests.xml")
 }
 
 dependencies {

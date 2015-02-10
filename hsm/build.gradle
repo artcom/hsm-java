@@ -1,4 +1,11 @@
 apply plugin: 'java'
+apply plugin: 'pmd'
+
+pmd {
+    toolVersion = '5.1.3'
+    ignoreFailures = true
+    ruleSetFiles = files("${projectDir}/pmd-main.xml")
+}
 
 dependencies {
     compile 'log4j:log4j:1.2.16'
