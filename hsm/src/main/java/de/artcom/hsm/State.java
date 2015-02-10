@@ -2,7 +2,8 @@ package de.artcom.hsm;
 
 import com.google.common.collect.LinkedListMultimap;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,16 +11,12 @@ import java.util.Map;
 
 public class State<T extends State<T>> {
 
-    final static Logger LOGGER = Logger.getLogger(StateMachine.class);
+    final static Logger LOGGER = LoggerFactory.getLogger(State.class);
 
     private final String mId;
-
     private Action mOnEnterAction;
-
     private Action mOnExitAction;
-
     private final LinkedListMultimap<String, Handler> mHandlers;
-
     private StateMachine mOwner;
 
     protected T getThis() {

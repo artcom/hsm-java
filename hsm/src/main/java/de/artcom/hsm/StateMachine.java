@@ -1,6 +1,7 @@
 package de.artcom.hsm;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +13,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class StateMachine {
 
-    final static Logger LOGGER = Logger.getLogger(StateMachine.class);
+    final static Logger LOGGER = LoggerFactory.getLogger(StateMachine.class);
 
     private final List<State> mStateList;
     private final List<State> mDescendantStateList = new ArrayList<State>();
