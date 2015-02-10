@@ -10,7 +10,6 @@ public class Parallel extends State<Parallel> {
 
     private final List<StateMachine> mStateMachineList;
 
-
     public Parallel(String id, StateMachine... stateMachines) {
         super(id);
         mStateMachineList = Arrays.asList(stateMachines);
