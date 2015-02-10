@@ -5,6 +5,6 @@ Reference is <http://en.wikipedia.org/wiki/UML_state_machine> and <https://githu
 
 ### License
 
-Copyright &copy; 2015 Art+Com AG.
-Distributed under the MIT License (MIT).
+Copyright &copy; 2015 [Art+Com AG](http://www.artcom.de/).
+Distributed under the MIT License.
 Please see [License File](LICENSE) for more information.
