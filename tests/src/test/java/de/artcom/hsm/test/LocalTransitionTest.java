@@ -21,7 +21,7 @@ import static org.mockito.Mockito.verify;
 
 public class LocalTransitionTest {
 
-    final static Logger logger = Logger.getLogger(LocalTransitionTest.class);
+    final static Logger LOGGER = Logger.getLogger(LocalTransitionTest.class);
 
     @BeforeClass
     public static void setupLogger() {

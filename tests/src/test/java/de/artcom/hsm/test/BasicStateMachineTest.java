@@ -19,14 +19,14 @@ import de.artcom.hsm.TransitionType;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.mockito.Matchers.notNull;
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
 public class BasicStateMachineTest {
 
-    final static Logger logger = Logger.getLogger(BasicStateMachineTest.class);
+    final static Logger LOGGER = Logger.getLogger(BasicStateMachineTest.class);
 
     @BeforeClass
     public static void setupLogger() {
@@ -114,7 +114,6 @@ public class BasicStateMachineTest {
         State on = new State("on")
                 .addHandler("toggle", "off", TransitionType.External)
                 .onExit(onExitAction);
-        Action offEnterAction = mock(Action.class);
         StateMachine sm = new StateMachine(on);
         sm.init();
 
@@ -264,6 +263,7 @@ public class BasicStateMachineTest {
     public void enumTest() {
         // just for the code coverage (^__^)
         TransitionType local = TransitionType.valueOf("Local");
+        assertThat(local, equalTo(TransitionType.Local));
     }
 
 //    abstract class MemoState extends State<MemoState> {

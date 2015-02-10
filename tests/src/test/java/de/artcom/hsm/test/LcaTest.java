@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 
 public class LcaTest {
 
-    final static Logger logger = Logger.getLogger(LcaTest.class);
+    final static Logger LOGGER = Logger.getLogger(LcaTest.class);
 
     @BeforeClass
     public static void setupLogger() {

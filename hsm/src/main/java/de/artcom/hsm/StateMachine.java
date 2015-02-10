@@ -12,24 +12,16 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class StateMachine {
 
-    final static Logger logger = Logger.getLogger(StateMachine.class);
+    final static Logger LOGGER = Logger.getLogger(StateMachine.class);
 
     private final List<State> mStateList;
-
     private final List<State> mDescendantStateList = new ArrayList<State>();
-
-    private State mInitialState = null;
-
+    private State mInitialState;
     private State mCurrentState;
-
     private final Queue<Event> mEventQueue = new ConcurrentLinkedQueue<Event>();
-
     private boolean mEventQueueInProgress = false;
-
     private final List<StateMachine> mPath = new ArrayList<StateMachine>();
-
     private State mContainer;
-
 
     public StateMachine(State... states) {
         mStateList = Arrays.asList(states);
@@ -64,16 +56,16 @@ public class StateMachine {
     }
 
     public void init() {
-        logger.debug("init");
-        if (mInitialState != null) {
-            enterState(null, mInitialState, new HashMap<String, Object>());
-        } else {
+        LOGGER.debug("init");
+        if (mInitialState == null) {
             throw new IllegalStateException("Can't init without states defined.");
+        } else {
+            enterState(null, mInitialState, new HashMap<String, Object>());
         }
     }
 
     public void teardown() {
-        logger.debug("teardown");
+        LOGGER.debug("teardown");
         exitState(mCurrentState, null, new HashMap<String, Object>());
     }
 
@@ -83,7 +75,7 @@ public class StateMachine {
 
     public void handleEvent(String eventName, Map<String, Object> payload) {
         mEventQueue.add(new Event(eventName, payload));
-        logger.debug("handleEvent: " + eventName);
+        LOGGER.debug("handleEvent: " + eventName);
         if (mEventQueueInProgress) {
             //events are already processed
         } else {
@@ -100,7 +92,7 @@ public class StateMachine {
     }
 
     void executeHandler(Handler handler, Event event) {
-        logger.debug("execute handler for event: " + event.getName());
+        LOGGER.debug("execute handler for event: " + event.getName());
 
         Action handlerAction = handler.getAction();
         State targetState = getStateById(handler.getTargetStateId());
@@ -214,7 +206,7 @@ public class StateMachine {
         sb.append("\r\n");
         for (StateMachine stateMachine : mPath) {
             sb.append(Integer.toString(++count));
-            sb.append(" ");
+            sb.append(' ');
             sb.append(stateMachine.toString());
             sb.append("\r\n");
         }
@@ -222,7 +214,7 @@ public class StateMachine {
     }
 
     public void addParent(StateMachine stateMachine) {
-        logger.debug("addParent " + stateMachine.toString());
+        LOGGER.debug("addParent " + stateMachine.toString());
         mPath.add(0, stateMachine);
         for (State state : mStateList) {
             state.addParent(stateMachine);

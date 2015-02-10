@@ -61,10 +61,10 @@ public class Parallel extends State<Parallel> {
         sb.append("/(");
         for (StateMachine stateMachine : mStateMachineList) {
             sb.append(stateMachine.toString());
-            sb.append("|");
+            sb.append('|');
         }
         sb.deleteCharAt(sb.length() - 1);
-        sb.append(")");
+        sb.append(')');
         return sb.toString();
     }
 

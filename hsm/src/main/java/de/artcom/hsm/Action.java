@@ -4,11 +4,9 @@ import java.util.Map;
 
 public abstract class Action {
 
-    protected State mPreviousState = null;
-
-    protected State mNextState = null;
-
-    protected Map<String, Object> mPayload = null;
+    protected State mPreviousState;
+    protected State mNextState;
+    protected Map<String, Object> mPayload;
 
     public abstract void run();
 

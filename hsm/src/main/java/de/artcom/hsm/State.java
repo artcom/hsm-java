@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class State<T extends State<T>> {
 
-    final static Logger logger = Logger.getLogger(StateMachine.class);
+    final static Logger LOGGER = Logger.getLogger(StateMachine.class);
 
     private final String mId;
 
@@ -74,7 +74,7 @@ public class State<T extends State<T>> {
     }
 
     void enter(State prev, State next, Map<String, Object> payload) {
-        logger.debug("enter: " + getId());
+        LOGGER.debug("enter: " + getId());
         if (mOnEnterAction != null) {
             mOnEnterAction.setPreviousState(prev);
             mOnEnterAction.setNextState(next);
@@ -83,7 +83,7 @@ public class State<T extends State<T>> {
     }
 
     void exit(State prev, State next, Map<String, Object> payload) {
-        logger.debug("exit: " + getId());
+        LOGGER.debug("exit: " + getId());
         if (mOnExitAction != null) {
             mOnExitAction.setPreviousState(prev);
             mOnExitAction.setNextState(next);
@@ -103,7 +103,7 @@ public class State<T extends State<T>> {
     boolean handleWithOverride(Event event) {
         Handler handler = findHandler(event);
         if (handler != null) {
-            logger.debug("handle Event: " + event.getName());
+            LOGGER.debug("handle Event: " + event.getName());
             mOwner.executeHandler(handler, event);
             return true;
         }

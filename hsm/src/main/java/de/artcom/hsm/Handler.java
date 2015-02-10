@@ -3,12 +3,9 @@ package de.artcom.hsm;
 class Handler {
 
     private final String mTargetStateId;
-
     private final TransitionType mType;
-
-    private Guard mGuard = null;
-
-    private Action mAction = null;
+    private Guard mGuard;
+    private Action mAction;
 
     public Handler(String targetStateId, TransitionType type, Action action, Guard guard) {
         mTargetStateId = targetStateId;

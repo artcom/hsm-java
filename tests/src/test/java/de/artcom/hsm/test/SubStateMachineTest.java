@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 
 public class SubStateMachineTest {
 
-    final static Logger logger = Logger.getLogger(SubStateMachineTest.class);
+    final static Logger LOGGER = Logger.getLogger(SubStateMachineTest.class);
 
     @BeforeClass
     public static void setupLogger() {

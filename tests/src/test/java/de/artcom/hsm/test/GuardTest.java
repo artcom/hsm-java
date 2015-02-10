@@ -22,7 +22,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 
 public class GuardTest {
 
-    final static Logger logger = Logger.getLogger(GuardTest.class);
+    final static Logger LOGGER = Logger.getLogger(GuardTest.class);
 
     @BeforeClass
     public static void setupLogger() {

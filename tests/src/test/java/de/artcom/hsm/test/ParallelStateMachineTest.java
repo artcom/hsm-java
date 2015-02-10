@@ -22,7 +22,7 @@ import static org.mockito.Mockito.verify;
 
 public class ParallelStateMachineTest {
 
-    final static Logger logger = Logger.getLogger(ParallelStateMachineTest.class);
+    final static Logger LOGGER = Logger.getLogger(ParallelStateMachineTest.class);
 
     @BeforeClass
     public static void setupLogger() {
@@ -51,7 +51,7 @@ public class ParallelStateMachineTest {
 
         // when:
         sm.init();
-        logger.debug(sm.toString());
+        LOGGER.debug(sm.toString());
 
         // then:
         // no exception

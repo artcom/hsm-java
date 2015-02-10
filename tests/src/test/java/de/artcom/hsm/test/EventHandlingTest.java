@@ -23,7 +23,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 
 public class EventHandlingTest {
 
-    final static Logger logger = Logger.getLogger(EventHandlingTest.class);
+    final static Logger LOGGER = Logger.getLogger(EventHandlingTest.class);
 
     @BeforeClass
     public static void setupLogger() {

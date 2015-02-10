@@ -15,7 +15,7 @@ import de.artcom.hsm.Sub;
 
 public class ComplexTests {
 
-    final static Logger logger = Logger.getLogger(BasicStateMachineTest.class);
+    final static Logger LOGGER = Logger.getLogger(BasicStateMachineTest.class);
 
     private State a1;
     private State a2;
@@ -76,6 +76,9 @@ public class ComplexTests {
 
     @Test
     public void complexStateMachineTest1() {
-
+        //when:
+        stateMachine.init();
+        stateMachine.teardown();
+        //then: no exceptions
     }
 }
