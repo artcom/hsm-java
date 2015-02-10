@@ -10,6 +10,7 @@
   <rule ref="rulesets/java/codesize.xml"/>
   <rule ref="rulesets/java/coupling.xml">
     <exclude name="LawOfDemeter"/>
+    <exclude name="LoosePackageCoupling"/>
   </rule>
   <rule ref="rulesets/java/design.xml">
     <exclude name="SingularField"/>

@@ -12,8 +12,7 @@ task jacocoReport(type: JacocoReport) {
 pmd {
     toolVersion = '5.1.3'
     ignoreFailures = true
-    /* ruleSetFiles = files("${projectDir}/pmd-tests.xml") */
-    ruleSetFiles = files("../pmd-rules.xml")
+    ruleSetFiles = files("${rootDir}/pmd-rules.xml")
 }
 
 dependencies {
