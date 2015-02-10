@@ -28,7 +28,7 @@ public class StateMachine {
 
     private final List<StateMachine> mPath = new ArrayList<StateMachine>();
 
-    private State mOrigin;
+    private State mContainer;
 
 
     public StateMachine(State... states) {
@@ -41,12 +41,12 @@ public class StateMachine {
         generateDescendantStateList();
     }
 
-    void setOrigin(State origin) {
-        mOrigin = origin;
+    void setContainer(State container) {
+        mContainer = container;
     }
 
-    State getOrigin() {
-        return mOrigin;
+    State getContainer() {
+        return mContainer;
     }
 
     private void generateDescendantStateList() {
@@ -163,7 +163,7 @@ public class StateMachine {
     }
 
     private State findNextStateOnPathTo(State targetState) {
-        return findNextStateMachineOnPathTo(targetState).getOrigin();
+        return findNextStateMachineOnPathTo(targetState).getContainer();
     }
 
     private StateMachine findNextStateMachineOnPathTo(State targetState) {
