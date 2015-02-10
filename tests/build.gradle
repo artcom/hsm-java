@@ -17,6 +17,8 @@ pmd {
 
 dependencies {
     compile project(':hsm')
+    testCompile 'ch.qos.logback:logback-classic:1.1.2'
+    testCompile 'ch.qos.logback:logback-core:1.1.2'
     testCompile 'org.hamcrest:hamcrest-integration:1.3'
     testCompile 'org.hamcrest:hamcrest-core:1.3'
     testCompile 'org.hamcrest:hamcrest-library:1.3'
