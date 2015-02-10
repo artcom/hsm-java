@@ -11,7 +11,7 @@
   <rule ref="rulesets/java/coupling.xml">
     <exclude name="LawOfDemeter"/>
   </rule>
-  <rule ref="rulesets/java/design.xml"/>
+  <rule ref="rulesets/java/design.xml">
     <exclude name="SingularField"/>
   </rule>
   <rule ref="rulesets/java/empty.xml"/>
