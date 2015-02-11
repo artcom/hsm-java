@@ -19,7 +19,7 @@ gradle.taskGraph.whenReady { taskGraph ->
         uploadArchives {
             repositories {
                 mavenDeployer {
-                    repository(url: "https://archiva.artcom.de/repository/internal/") {
+                    repository(url: 'https://archiva.artcom.de/repository/internal/') {
                         authentication(userName: user, password: pass)
                     }
                     pom.version = projectVersion
