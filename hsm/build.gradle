@@ -1,11 +1,36 @@
 apply plugin: 'java'
 apply plugin: 'pmd'
 apply plugin: 'maven-publish'
+apply plugin: 'maven'
 
 pmd {
     toolVersion = '5.1.3'
     ignoreFailures = true
     ruleSetFiles = files("${rootDir}/pmd-rules.xml")
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    if(taskGraph.hasTask(':hsm:uploadArchives')) {
+        // Only execute when we are trying to assemble a release build
+
+        def user = System.console().readLine("\nPlease enter username: ").toString()
+        def pass = System.console().readPassword("Please enter password: ").toString()
+
+        uploadArchives {
+            repositories {
+                mavenDeployer {
+                    repository(url: "https://archiva.artcom.de/repository/internal/") {
+                        authentication(userName: user, password: pass)
+                    }
+                    pom.version = projectVersion
+                    pom.groupId = projectGroupId
+                    pom.artifactId = projectArtifactId
+
+                }
+            }
+        }
+
+    }
 }
 
 publishing {
