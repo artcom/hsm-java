@@ -44,6 +44,18 @@ publishing {
     }
 }
 
+publishing {
+    repositories {
+        maven {
+            url 'https://archiva.artcom.de/repository/internal/'
+            credentials {
+                username 'foo'
+                password 'bar'
+            }
+        }
+    }
+}
+
 dependencies {
     compile 'org.slf4j:slf4j-api:1.7.3'
     /* compile 'com.google.guava:guava:17.0' */
