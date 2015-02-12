@@ -8,12 +8,13 @@ pmd {
     ruleSetFiles = files("${rootDir}/pmd-rules.xml")
 }
 
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
 publishing {
     publications {
         maven(MavenPublication) {
-            groupId projectGroupId
             version projectVersion
-            artifactId projectArtifactId
             from components.java
         }
     }
@@ -23,4 +24,15 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.3'
     /* compile 'com.google.guava:guava:17.0' */
     compile 'com.google.guava:guava-jdk5:13.0'
+}
+
+task reportDate << {
+    println "execution at: " + new Date()
+    println "version: " + version
+}
+
+allprojects {
+    afterEvaluate { project ->
+        project.tasks.publishToMavenLocal.dependsOn project.tasks.reportDate
+    }
 }
