@@ -3,32 +3,32 @@ package de.artcom.hsm;
 class Handler {
 
     private final String mTargetStateId;
-    private final TransitionType mType;
+    private final TransitionKind mKind;
     private Guard mGuard;
     private Action mAction;
 
-    public Handler(String targetStateId, TransitionType type, Action action, Guard guard) {
+    public Handler(String targetStateId, TransitionKind kind, Action action, Guard guard) {
         mTargetStateId = targetStateId;
-        mType = type;
+        mKind = kind;
         mAction = action;
         mGuard = guard;
     }
 
-    public Handler(String targetStateId, TransitionType type, Guard guard) {
+    public Handler(String targetStateId, TransitionKind kind, Guard guard) {
         mTargetStateId = targetStateId;
-        mType = type;
+        mKind = kind;
         mGuard = guard;
     }
 
-    public Handler(String targetStateId, TransitionType type, Action action) {
+    public Handler(String targetStateId, TransitionKind kind, Action action) {
         mTargetStateId = targetStateId;
-        mType = type;
+        mKind = kind;
         mAction = action;
     }
 
-    public Handler(String targetStateId, TransitionType type) {
+    public Handler(String targetStateId, TransitionKind kind) {
         mTargetStateId = targetStateId;
-        mType = type;
+        mKind = kind;
     }
 
     public boolean evaluate(Event event) {
@@ -46,8 +46,8 @@ class Handler {
         return mAction;
     }
 
-    public TransitionType getType() {
-        return mType;
+    public TransitionKind getKind() {
+        return mKind;
     }
 
 }

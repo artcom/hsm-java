@@ -7,7 +7,7 @@ import de.artcom.hsm.Action;
 import de.artcom.hsm.State;
 import de.artcom.hsm.StateMachine;
 import de.artcom.hsm.Sub;
-import de.artcom.hsm.TransitionType;
+import de.artcom.hsm.TransitionKind;
 
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -36,16 +36,16 @@ public class SubStateMachineTest {
         Action onEnterOn = mock(Action.class);
         Action onEnterOff = mock(Action.class);
         State loud = new State("loud")
-                .addHandler("volume_down", "quiet", TransitionType.External)
+                .addHandler("volume_down", "quiet", TransitionKind.External)
                 .onEnter(onEnterLoud);
         State quiet = new State("quiet")
-                .addHandler("volume_up", "loud", TransitionType.External)
+                .addHandler("volume_up", "loud", TransitionKind.External)
                 .onEnter(onEnterQuiet);
         Sub on = new Sub("on", new StateMachine(quiet, loud))
-                .addHandler("switched_off", "off", TransitionType.External)
+                .addHandler("switched_off", "off", TransitionKind.External)
                 .onEnter(onEnterOn);
         State off = new State("off")
-                .addHandler("switched_on", "on", TransitionType.External)
+                .addHandler("switched_on", "on", TransitionKind.External)
                 .onEnter(onEnterOff);
         StateMachine sm = new StateMachine(off, on);
         sm.init();

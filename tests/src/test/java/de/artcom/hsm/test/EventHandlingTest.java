@@ -10,7 +10,7 @@ import de.artcom.hsm.Guard;
 import de.artcom.hsm.State;
 import de.artcom.hsm.StateMachine;
 import de.artcom.hsm.Sub;
-import de.artcom.hsm.TransitionType;
+import de.artcom.hsm.TransitionKind;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -38,13 +38,13 @@ public class EventHandlingTest {
 
         softEgg.onEnter(onEnterSoftEgg);
         hardEgg.onEnter(onEnterHardEgg);
-        rawEgg.addHandler("boil", "softEgg", TransitionType.External, boilAction);
+        rawEgg.addHandler("boil", "softEgg", TransitionKind.External, boilAction);
 
         Action boilTooLongAction = mock(Action.class);
-        rawEgg.addHandler("boil_too_long", "hardEgg", TransitionType.External, boilTooLongAction);
+        rawEgg.addHandler("boil_too_long", "hardEgg", TransitionKind.External, boilTooLongAction);
 
         Action boilTooLongAction2 = mock(Action.class);
-        softEgg.addHandler("boil_too_long", "softEgg", TransitionType.Internal, boilTooLongAction2);
+        softEgg.addHandler("boil_too_long", "softEgg", TransitionKind.Internal, boilTooLongAction2);
 
         sm.init();
 
@@ -64,14 +64,14 @@ public class EventHandlingTest {
         Action enterA2 = mock(Action.class);
         Action enterB = mock(Action.class);
 
-        State a1 = new State("a1").addHandler("T1", "a2", TransitionType.External, new Guard() {
+        State a1 = new State("a1").addHandler("T1", "a2", TransitionKind.External, new Guard() {
             @Override
             public boolean evaluate(Map<String, Object> payload) {
                 return payload.containsKey("foo");
             }
         });
         State a2 = new State("a2").onEnter(enterA2);
-        Sub a = new Sub("a", a1, a2).addHandler("T1", "b", TransitionType.External);
+        Sub a = new Sub("a", a1, a2).addHandler("T1", "b", TransitionKind.External);
 
         State b = new State("b").onEnter(enterB);
         StateMachine sm = new StateMachine(a, b);
@@ -94,14 +94,14 @@ public class EventHandlingTest {
         Action enterA2 = mock(Action.class);
         Action enterB = mock(Action.class);
 
-        State a1 = new State("a1").addHandler("T1", "a2", TransitionType.External, new Guard() {
+        State a1 = new State("a1").addHandler("T1", "a2", TransitionKind.External, new Guard() {
             @Override
             public boolean evaluate(Map<String, Object> payload) {
                 return payload.containsKey("foo");
             }
         });
         State a2 = new State("a2").onEnter(enterA2);
-        Sub a = new Sub("a", a1, a2).addHandler("T1", "b", TransitionType.External);
+        Sub a = new Sub("a", a1, a2).addHandler("T1", "b", TransitionKind.External);
 
         State b = new State("b").onEnter(enterB);
         StateMachine sm = new StateMachine(a, b);

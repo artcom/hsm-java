@@ -8,7 +8,7 @@ import de.artcom.hsm.Parallel;
 import de.artcom.hsm.State;
 import de.artcom.hsm.StateMachine;
 import de.artcom.hsm.Sub;
-import de.artcom.hsm.TransitionType;
+import de.artcom.hsm.TransitionKind;
 
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -51,26 +51,26 @@ public class ParallelStateMachineTest {
 
         State capsOn = new State("caps_on")
                 .onEnter(onEnterCapsOn)
-                .addHandler("capslock", "caps_off", TransitionType.External);
+                .addHandler("capslock", "caps_off", TransitionKind.External);
         State capsOff = new State("caps_off")
                 .onEnter(onEnterCapsOff)
-                .addHandler("capslock", "caps_on", TransitionType.External);
+                .addHandler("capslock", "caps_on", TransitionKind.External);
         StateMachine capsStateMachine = new StateMachine(capsOff, capsOn);
 
         State numOn = new State("num_on")
                 .onEnter(onEnterNumOn)
-                .addHandler("numlock", "num_off", TransitionType.External);
+                .addHandler("numlock", "num_off", TransitionKind.External);
         State numOff = new State("num_off")
                 .onEnter(onEnterNumOff)
-                .addHandler("numlock", "num_on", TransitionType.External);
+                .addHandler("numlock", "num_on", TransitionKind.External);
         StateMachine numStateMachine = new StateMachine(numOff, numOn);
 
         Parallel keyboardOn = new Parallel("keyboard_on", capsStateMachine, numStateMachine)
                 .onEnter(onEnterKeyboardOn)
-                .addHandler("unplug", "keyboard_off", TransitionType.External);
+                .addHandler("unplug", "keyboard_off", TransitionKind.External);
         State keyboardOff = new State("keyboard_off")
                 .onEnter(onEnterKeyboardOff)
-                .addHandler("plug", "keyboard_on", TransitionType.External);
+                .addHandler("plug", "keyboard_on", TransitionKind.External);
         StateMachine sm = new StateMachine(keyboardOff, keyboardOn);
 
         sm.init();
@@ -112,7 +112,7 @@ public class ParallelStateMachineTest {
         StateMachine p1 = new StateMachine(p11);
         StateMachine p2 = new StateMachine(p21);
         Parallel s2 = new Parallel("s2", p1, p2);
-        Sub s = new Sub("s", s1, s2).addHandler("T1", "p21", TransitionType.External);
+        Sub s = new Sub("s", s1, s2).addHandler("T1", "p21", TransitionKind.External);
 
         StateMachine sm = new StateMachine(s);
         sm.init();

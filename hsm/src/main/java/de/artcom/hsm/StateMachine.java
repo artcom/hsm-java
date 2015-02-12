@@ -104,7 +104,7 @@ public class StateMachine {
             handlerAction.run();
         }
 
-        switch (handler.getType()) {
+        switch (handler.getKind()) {
             case External:
                 StateMachine lca = findLowestCommonAncestor(targetState);
                 lca.switchState(mCurrentState, targetState, event.getPayload());

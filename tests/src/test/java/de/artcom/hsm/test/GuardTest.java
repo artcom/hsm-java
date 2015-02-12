@@ -9,7 +9,7 @@ import de.artcom.hsm.Action;
 import de.artcom.hsm.Guard;
 import de.artcom.hsm.State;
 import de.artcom.hsm.StateMachine;
-import de.artcom.hsm.TransitionType;
+import de.artcom.hsm.TransitionKind;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -23,13 +23,13 @@ public class GuardTest {
         Action enterA2 = mock(Action.class);
         Action enterA3 = mock(Action.class);
 
-        State a1 = new State("a1").addHandler("T1", "a2", TransitionType.External, new Guard() {
+        State a1 = new State("a1").addHandler("T1", "a2", TransitionKind.External, new Guard() {
             @Override
             public boolean evaluate(Map<String, Object> payload) {
                 Boolean foo = (Boolean) payload.get("foo");
                 return foo;
             }
-        }).addHandler("T1", "a3", TransitionType.External, new Guard() {
+        }).addHandler("T1", "a3", TransitionKind.External, new Guard() {
             @Override
             public boolean evaluate(Map<String, Object> payload) {
                 Boolean foo = (Boolean) payload.get("foo");
@@ -57,13 +57,13 @@ public class GuardTest {
         Action enterA2 = mock(Action.class);
         Action enterA3 = mock(Action.class);
 
-        State a1 = new State("a1").addHandler("T1", "a2", TransitionType.External, new Guard() {
+        State a1 = new State("a1").addHandler("T1", "a2", TransitionKind.External, new Guard() {
             @Override
             public boolean evaluate(Map<String, Object> payload) {
                 Boolean foo = (Boolean) payload.get("foo");
                 return foo;
             }
-        }).addHandler("T1", "a3", TransitionType.External, new Guard() {
+        }).addHandler("T1", "a3", TransitionKind.External, new Guard() {
             @Override
             public boolean evaluate(Map<String, Object> payload) {
                 Boolean foo = (Boolean) payload.get("foo");
@@ -89,7 +89,7 @@ public class GuardTest {
     public void createHandlerWithActionAndGuard() {
         // given:
         Action a1Action = mock(Action.class);
-        State a = new State("a").addHandler("T1", "a", TransitionType.Internal, a1Action, new Guard() {
+        State a = new State("a").addHandler("T1", "a", TransitionKind.Internal, a1Action, new Guard() {
             @Override
             public boolean evaluate(Map<String, Object> payload) {
                 return payload.containsKey("foo");

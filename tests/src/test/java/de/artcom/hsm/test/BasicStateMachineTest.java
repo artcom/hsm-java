@@ -10,7 +10,7 @@ import de.artcom.hsm.Action;
 import de.artcom.hsm.State;
 import de.artcom.hsm.StateMachine;
 import de.artcom.hsm.Sub;
-import de.artcom.hsm.TransitionType;
+import de.artcom.hsm.TransitionKind;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
@@ -73,7 +73,7 @@ public class BasicStateMachineTest {
         //given:
         Action onExitAction = mock(Action.class);
         State on = new State("on")
-                .addHandler("toggle", "off", TransitionType.External)
+                .addHandler("toggle", "off", TransitionKind.External)
                 .onExit(onExitAction);
         Action offEnterAction = mock(Action.class);
         State off = new State("off")
@@ -94,7 +94,7 @@ public class BasicStateMachineTest {
         // given:
         Action onExitAction = mock(Action.class);
         State on = new State("on")
-                .addHandler("toggle", "off", TransitionType.External)
+                .addHandler("toggle", "off", TransitionKind.External)
                 .onExit(onExitAction);
         StateMachine sm = new StateMachine(on);
         sm.init();
@@ -112,7 +112,7 @@ public class BasicStateMachineTest {
         //given:
         Action onExitAction = mock(Action.class);
         State on = new State("on")
-                .addHandler("toggle", "off", TransitionType.External)
+                .addHandler("toggle", "off", TransitionKind.External)
                 .onExit(onExitAction);
         Action offEnterAction = mock(Action.class);
         State off = new State("off")
@@ -143,7 +143,7 @@ public class BasicStateMachineTest {
             }
         };
         State on = new State("on")
-                .addHandler("toggle", "off", TransitionType.External, toggleAction);
+                .addHandler("toggle", "off", TransitionKind.External, toggleAction);
         State off = new State("off");
         StateMachine sm = new StateMachine(on, off);
         sm.init();
@@ -172,7 +172,7 @@ public class BasicStateMachineTest {
             }
         };
         State on = new State("on")
-                .addHandler("toggle", "off", TransitionType.External, toggleAction);
+                .addHandler("toggle", "off", TransitionKind.External, toggleAction);
         State off = new State("off");
         StateMachine sm = new StateMachine(on, off);
         sm.init();
@@ -192,7 +192,7 @@ public class BasicStateMachineTest {
         Action onExitAction = mock(Action.class);
         Action toggleAction = mock(Action.class);
         State on = new State("on")
-                .addHandler("toggle", "on", TransitionType.Internal, toggleAction)
+                .addHandler("toggle", "on", TransitionKind.Internal, toggleAction)
                 .onExit(onExitAction);
         StateMachine sm = new StateMachine(on);
         sm.init();
@@ -208,7 +208,7 @@ public class BasicStateMachineTest {
     @Test
     public void noMatchingStateAvailable() {
         // given:
-        State on = new State("on").addHandler("toggle", "off", TransitionType.External);
+        State on = new State("on").addHandler("toggle", "off", TransitionKind.External);
         StateMachine sm = new StateMachine(on);
         sm.init();
 
@@ -223,7 +223,7 @@ public class BasicStateMachineTest {
     @Test
     public void canGetPathString() {
         // given:
-        State a1 = new State("a1").addHandler("T1", "b201", TransitionType.External);
+        State a1 = new State("a1").addHandler("T1", "b201", TransitionKind.External);
         Sub a = new Sub("a", a1);
         Sub foo = new Sub("foo", a);
 
@@ -244,8 +244,8 @@ public class BasicStateMachineTest {
     @Test
     public void enumTest() {
         // just for the code coverage (^__^)
-        TransitionType local = TransitionType.valueOf("Local");
-        assertThat(local, equalTo(TransitionType.Local));
+        TransitionKind local = TransitionKind.valueOf("Local");
+        assertThat(local, equalTo(TransitionKind.Local));
     }
 
 //    abstract class MemoState extends State<MemoState> {

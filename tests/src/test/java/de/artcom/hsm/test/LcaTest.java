@@ -7,7 +7,7 @@ import de.artcom.hsm.Action;
 import de.artcom.hsm.State;
 import de.artcom.hsm.StateMachine;
 import de.artcom.hsm.Sub;
-import de.artcom.hsm.TransitionType;
+import de.artcom.hsm.TransitionKind;
 
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -20,7 +20,7 @@ public class LcaTest {
         Action exitA1 = mock(Action.class);
         Action exitA = mock(Action.class);
         Action exitFoo = mock(Action.class);
-        State a1 = new State("a1").onExit(exitA1).addHandler("T1", "bar", TransitionType.External);
+        State a1 = new State("a1").onExit(exitA1).addHandler("T1", "bar", TransitionKind.External);
         Sub a = new Sub("a", a1).onExit(exitA);
         Sub foo = new Sub("foo", a).onExit(exitFoo);
 
@@ -58,7 +58,7 @@ public class LcaTest {
         Action exitA1 = mock(Action.class);
         Action exitA = mock(Action.class);
         Action exitFoo = mock(Action.class);
-        State a1 = new State("a1").onExit(exitA1).addHandler("T1", "b201", TransitionType.External);
+        State a1 = new State("a1").onExit(exitA1).addHandler("T1", "b201", TransitionKind.External);
         Sub a = new Sub("a", a1).onExit(exitA);
         Sub foo = new Sub("foo", a).onExit(exitFoo);
 

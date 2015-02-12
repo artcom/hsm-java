@@ -1,6 +1,6 @@
 package de.artcom.hsm;
 
-public enum TransitionType {
+public enum TransitionKind {
     External,
     Local,
     Internal
