@@ -106,8 +106,7 @@ public class StateMachine {
 
         switch (handler.getKind()) {
             case External:
-                StateMachine lca = findLowestCommonAncestor(targetState);
-                lca.switchState(mCurrentState, targetState, event.getPayload());
+                doExternalTransition(targetState, event);
                 break;
             case Local:
                 doLocalTransition(targetState, event);
@@ -126,9 +125,17 @@ public class StateMachine {
             int targetLevel = targetState.getOwner().getPath().size();
             StateMachine stateMachine = mPath.get(targetLevel);
             stateMachine.switchState(mCurrentState, targetState, event.getPayload());
+        } else if(mCurrentState.equals(targetState)) {
+            //TODO: clarify desired behavior for local transition on self
+            //      currently behaves like an internal transition
         } else {
-            throw new IllegalStateException("Target state is no sub state of " + mCurrentState.getId() + " therefore a local transition is not Possible.");
+            doExternalTransition(targetState, event);
         }
+    }
+
+    private void doExternalTransition(State targetState, Event event) {
+        StateMachine lca = findLowestCommonAncestor(targetState);
+        lca.switchState(mCurrentState, targetState, event.getPayload());
     }
 
     void switchState(State previousState, State nextState, Map<String, Object> payload) {

@@ -2,6 +2,7 @@ package de.artcom.hsm.test;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.Ignore;
 
 import de.artcom.hsm.Action;
 import de.artcom.hsm.State;
@@ -12,6 +13,8 @@ import de.artcom.hsm.TransitionKind;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.inOrder;
+import org.mockito.InOrder;
 
 public class LocalTransitionTest {
 
@@ -34,7 +37,7 @@ public class LocalTransitionTest {
     }
 
     @Test
-    public void canExecuteLocalTransition2() {
+    public void canExecuteLocalTransitionToAncestorState() {
         // given:
         Action sEnter = mock(Action.class);
         Action s1Enter = mock(Action.class);
@@ -55,43 +58,27 @@ public class LocalTransitionTest {
     }
 
     @Test
-    public void cannotExecuteLocalTransition() {
+    public void canExecuteLocalTransitionWhichResultsInExternal() {
         // given:
-        State s1 = new State("s1");
-        Sub s = new Sub("s", s1).addHandler("T1", "b1", TransitionKind.Local);
+        Action sExit = mock(Action.class);
+        Action s1Exit = mock(Action.class);
+        Action b1Enter = mock(Action.class);
+        State s1 = new State("s1").onExit(s1Exit);
+        Sub s = new Sub("s", s1).onExit(sExit).addHandler("T1", "b1", TransitionKind.Local);
 
-        State b1 = new State("b1");
+        State b1 = new State("b1").onEnter(b1Enter);
         Sub a = new Sub("a", s, b1);
         StateMachine sm = new StateMachine(a);
         sm.init();
 
         // when:
-        try {
-            sm.handleEvent("T1");
-            Assert.fail();
-        } catch (IllegalStateException e) {
-            // then:
-        }
+        sm.handleEvent("T1");
 
         // then:
-    }
-
-    @Test
-    public void cannotExecuteLocalTransitionToSelf() {
-        // given:
-        State s1 = new State("s1");
-        Sub s = new Sub("s", s1).addHandler("T1", "s", TransitionKind.Local);
-        StateMachine sm = new StateMachine(s);
-        sm.init();
-
-        // when:
-        try {
-            sm.handleEvent("T1");
-            Assert.fail();
-        } catch (IllegalStateException e) {
-            // then:
-        }
-
+        InOrder inOrder = inOrder(sExit, s1Exit, b1Enter);
+        inOrder.verify(s1Exit).run();
+        inOrder.verify(sExit).run();
+        inOrder.verify(b1Enter).run();
     }
 
 }
