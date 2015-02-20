@@ -76,13 +76,14 @@ public class StateMachine {
 
     public void handleEvent(String eventName, Map<String, Object> payload) {
         mEventQueue.add(new Event(eventName, payload));
-        LOGGER.debug("handleEvent: " + eventName);
         if (mEventQueueInProgress) {
             //events are already processed
         } else {
             mEventQueueInProgress = true;
             while (mEventQueue.peek() != null) {
-                mCurrentState.handleWithOverride(mEventQueue.poll());
+                if(!mCurrentState.handleWithOverride(mEventQueue.poll())) {
+                    LOGGER.debug("nobody handled event: " + eventName);
+                }
             }
             mEventQueueInProgress = false;
         }
@@ -222,7 +223,6 @@ public class StateMachine {
     }
 
     public void addParent(StateMachine stateMachine) {
-        LOGGER.debug("addParent " + stateMachine.toString());
         mPath.add(0, stateMachine);
         for (State state : mStateList) {
             state.addParent(stateMachine);
