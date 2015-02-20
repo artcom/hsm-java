@@ -11,10 +11,19 @@ pmd {
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
+if (project.version == 'unspecified' && project.hasProperty('projectVersion')) {
+    project.version = project.projectVersion
+}
+
+def publishArtifactId = project.name
+if (project.hasProperty("projectArtifactId")) {
+    publishArtifactId = projectArtifactId
+}
+
 publishing {
     publications {
         maven(MavenPublication) {
-            version projectVersion
+            artifactId publishArtifactId
             from components.java
         }
     }
@@ -28,7 +37,9 @@ dependencies {
 
 task reportDate << {
     println "execution at: " + new Date()
-    println "version: " + version
+    println "group: " + project.group
+    println "name: " + project.name
+    println "version: " + project.version
 }
 
 allprojects {
