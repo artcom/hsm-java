@@ -71,7 +71,7 @@ public class State<T extends State<T>> {
     }
 
     void enter(State prev, State next, Map<String, Object> payload) {
-        LOGGER.debug("enter: " + getId());
+        LOGGER.debug(getId() + " - enter");
         if (mOnEnterAction != null) {
             mOnEnterAction.setPreviousState(prev);
             mOnEnterAction.setNextState(next);
@@ -80,7 +80,7 @@ public class State<T extends State<T>> {
     }
 
     void exit(State prev, State next, Map<String, Object> payload) {
-        LOGGER.debug("exit: " + getId());
+        LOGGER.debug(getId() + " - exit");
         if (mOnExitAction != null) {
             mOnExitAction.setPreviousState(prev);
             mOnExitAction.setNextState(next);
@@ -100,7 +100,7 @@ public class State<T extends State<T>> {
     boolean handleWithOverride(Event event) {
         Handler handler = findHandler(event);
         if (handler != null) {
-            LOGGER.debug("handle Event: " + event.getName());
+            LOGGER.debug(mId + " - handle Event: " + event.getName());
             mOwner.executeHandler(handler, event);
             return true;
         }
