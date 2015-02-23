@@ -75,6 +75,9 @@ public class StateMachine {
     }
 
     public void handleEvent(String eventName, Map<String, Object> payload) {
+        if(mCurrentState == null) {
+            return;
+        }
         mEventQueue.add(new Event(eventName, payload));
         if (mEventQueueInProgress) {
             //events are already processed
