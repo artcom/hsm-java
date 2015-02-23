@@ -222,7 +222,7 @@ public class StateMachine {
         return sb.toString();
     }
 
-    public void addParent(StateMachine stateMachine) {
+    void addParent(StateMachine stateMachine) {
         mPath.add(0, stateMachine);
         for (State state : mStateList) {
             state.addParent(stateMachine);
@@ -230,7 +230,7 @@ public class StateMachine {
     }
 
     // TODO: make it package private
-    public StateMachine findLowestCommonAncestor(State targetState) {
+    StateMachine findLowestCommonAncestor(State targetState) {
         List<StateMachine> targetPath = targetState.getOwner().getPath();
         int size = mPath.size();
         for (int i = 1; i < size; i++) {
