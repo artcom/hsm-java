@@ -248,34 +248,35 @@ public class BasicStateMachineTest {
         assertThat(local, equalTo(TransitionKind.Local));
     }
 
-//    abstract class MemoState extends State<MemoState> {
-//
-//        public MemoState(String id) {
-//            super(id);
-//            Action enterAction = new Action();
-//            onEnter(new Action() {
-//                @Override
-//                public void run() {
-//                    super.run();
-//                    doEnter(mPreviousState, mNextState);
-//                }
-//            });
-//            onExit(new Action() {
-//                @Override
-//                public void run() {
-//                    super.run();
-//                    doEnter(mPreviousState, mNextState);
-//                }
-//            });
-//        }
-//
-//        void doEnter(State prev, State next) {
-//
-//        }
-//
-//        void onExit(State prev, State next) {
-//
-//        }
-//
-//    }
+    @Test
+    public void emittedEventTestHandledFromTopStateMachine() {
+        class SampleState extends State<SampleState> {
+
+            public SampleState(String id) {
+                super(id);
+                onEnter(new Action() {
+                    @Override
+                    public void run() {
+                        SampleState.this.emitEvent("T1");
+                    }
+                });
+            }
+        }
+
+        // given:
+        Action bAction = mock(Action.class);
+        SampleState a1 = new SampleState("a1");
+
+        Sub a = new Sub("a", a1);
+        Sub b = new Sub("b", a).addHandler("T1", "b", TransitionKind.Internal, bAction);
+        Sub c = new Sub("c", b);
+        StateMachine stateMachine = new StateMachine(c);
+
+        // when:
+        stateMachine.init();
+
+        // then:
+        verify(bAction).run();
+    }
+
 }

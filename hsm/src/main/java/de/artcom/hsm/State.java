@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 public class State<T extends State<T>> {
@@ -118,5 +119,13 @@ public class State<T extends State<T>> {
 
     Collection<? extends State> getDescendantStates() {
         return new ArrayList<State>();
+    }
+
+    public void emitEvent(String event) {
+        emitEvent(event, new HashMap<String, Object>());
+    }
+
+    public void emitEvent(String eventName, Map<String, Object> payload) {
+        mOwner.getPath().get(0).handleEvent(eventName, payload);
     }
 }
