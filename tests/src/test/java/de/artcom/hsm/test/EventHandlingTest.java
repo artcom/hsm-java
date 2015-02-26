@@ -1,5 +1,8 @@
 package de.artcom.hsm.test;
 
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -114,6 +117,33 @@ public class EventHandlingTest {
         // then:
         verify(enterB).run();
         verifyZeroInteractions(enterA2);
+    }
+
+    @Test
+    public void handleTransitionWithPayload() {
+        // given
+        State a1 = new State("a1").addHandler("T1", "a2", TransitionKind.External)
+        .onExit(new Action() {
+            @Override
+            public void run() {
+                Assert.assertThat(mPayload, Matchers.hasKey("foo"));
+            }
+        });
+        State a2 = new State("a2")
+        .onEnter(new Action() {
+            @Override
+            public void run() {
+                Assert.assertThat(mPayload, Matchers.hasKey("foo"));
+            }
+        });
+        StateMachine sm = new StateMachine(a1, a2);
+        sm.init();
+
+        Map<String, Object> payload = new HashMap<String, Object>();
+        payload.put("foo", "bar");
+
+        // when
+        sm.handleEvent("T1", payload);
     }
 }
 

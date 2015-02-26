@@ -76,7 +76,7 @@ public class StateMachine {
 
     public void handleEvent(String eventName, Map<String, Object> payload) {
         if(mCurrentState == null) {
-            return;
+            return; // TODO: throw an exception here
         }
         mEventQueue.add(new Event(eventName, payload));
         if (mEventQueueInProgress) {

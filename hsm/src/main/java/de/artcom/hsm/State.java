@@ -76,6 +76,7 @@ public class State<T extends State<T>> {
         if (mOnEnterAction != null) {
             mOnEnterAction.setPreviousState(prev);
             mOnEnterAction.setNextState(next);
+            mOnEnterAction.setPayload(payload);
             mOnEnterAction.run();
         }
     }
@@ -85,6 +86,7 @@ public class State<T extends State<T>> {
         if (mOnExitAction != null) {
             mOnExitAction.setPreviousState(prev);
             mOnExitAction.setNextState(next);
+            mOnExitAction.setPayload(payload);
             mOnExitAction.run();
         }
     }
