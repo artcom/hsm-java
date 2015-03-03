@@ -257,7 +257,7 @@ public class BasicStateMachineTest {
                 onEnter(new Action() {
                     @Override
                     public void run() {
-                        SampleState.this.emitEvent("T1");
+                        SampleState.this.getEventHandler().handleEvent("T1");
                     }
                 });
             }

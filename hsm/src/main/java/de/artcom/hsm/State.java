@@ -123,11 +123,7 @@ public class State<T extends State<T>> {
         return new ArrayList<State>();
     }
 
-    public void emitEvent(String event) {
-        emitEvent(event, new HashMap<String, Object>());
-    }
-
-    public void emitEvent(String eventName, Map<String, Object> payload) {
-        mOwner.getPath().get(0).handleEvent(eventName, payload);
+    public EventHandler getEventHandler() {
+        return mOwner.getPath().get(0);
     }
 }

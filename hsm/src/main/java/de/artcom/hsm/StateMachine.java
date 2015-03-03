@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class StateMachine {
+public class StateMachine implements EventHandler {
 
     final static Logger LOGGER = LoggerFactory.getLogger(StateMachine.class);
 
@@ -70,10 +70,12 @@ public class StateMachine {
         exitState(mCurrentState, null, new HashMap<String, Object>());
     }
 
+    @Override
     public void handleEvent(String event) {
         handleEvent(event, new HashMap<String, Object>());
     }
 
+    @Override
     public void handleEvent(String eventName, Map<String, Object> payload) {
         if(mCurrentState == null) {
             return; // TODO: throw an exception here
