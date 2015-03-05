@@ -57,11 +57,18 @@ public class StateMachine implements EventHandler {
     }
 
     public void init() {
+        init(new HashMap<String, Object>());
+    }
+
+    public void init(Map<String, Object> payload) {
         LOGGER.debug("init");
         if (mInitialState == null) {
             throw new IllegalStateException("Can't init without states defined.");
         } else {
-            enterState(null, mInitialState, new HashMap<String, Object>());
+            if(payload  == null) {
+                payload = new HashMap<String, Object>();
+            }
+            enterState(null, mInitialState, payload);
         }
     }
 

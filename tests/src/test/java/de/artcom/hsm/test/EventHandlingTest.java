@@ -1,8 +1,8 @@
 package de.artcom.hsm.test;
 
-import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
+import org.hamcrest.collection.IsMapContaining;
+import org.hamcrest.core.IsEqual;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -15,6 +15,8 @@ import de.artcom.hsm.StateMachine;
 import de.artcom.hsm.Sub;
 import de.artcom.hsm.TransitionKind;
 
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -126,14 +128,14 @@ public class EventHandlingTest {
         .onExit(new Action() {
             @Override
             public void run() {
-                Assert.assertThat(mPayload, Matchers.hasKey("foo"));
+                assertThat(mPayload, Matchers.hasKey("foo"));
             }
         });
         State a2 = new State("a2")
         .onEnter(new Action() {
             @Override
             public void run() {
-                Assert.assertThat(mPayload, Matchers.hasKey("foo"));
+                assertThat(mPayload, Matchers.hasKey("foo"));
             }
         });
         StateMachine sm = new StateMachine(a1, a2);
@@ -144,6 +146,43 @@ public class EventHandlingTest {
 
         // when
         sm.handleEvent("T1", payload);
+    }
+
+    @Test
+    public void initWithPayload() {
+        // given
+        Action a1Enter = new Action() {
+            @Override
+            public void run() {
+                // then
+                assertThat(mPayload, IsMapContaining.hasKey("foo"));
+            }
+        };
+        State a1 = new State("a1").onEnter(a1Enter);
+        StateMachine sm = new StateMachine(a1);
+        Map<String, Object> payload = new HashMap<String, Object>();
+        payload.put("foo", "bar");
+
+        // when
+        sm.init(payload);
+    }
+
+    @Test
+    public void initWithNullPayload() {
+        // given
+        Action a1Enter = mock(Action.class);
+        State a1 = new State("a1").onEnter(a1Enter);
+        StateMachine sm = new StateMachine(a1);
+
+        // when
+        try {
+            sm.init(null);
+        } catch (NullPointerException npe) {
+            fail("StateMachine.init() should instantiate a new payload instead of throwing npe");
+        }
+
+        // then
+
     }
 }
 
