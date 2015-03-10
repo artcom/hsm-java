@@ -22,15 +22,12 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 public class BasicStateMachineTest {
 
     @Test
-    public void cannotInitEmptyStateMachine() {
-        // given:
-        StateMachine sm = new StateMachine();
+    public void cannotCreateEmptyStateMachine() {
 
-        // when:
         try {
-            sm.init();
-            Assert.fail("IllegalStateException should raise when initing a empty StateMachine");
-        } catch (IllegalStateException e) {
+            StateMachine sm = new StateMachine(null);
+            Assert.fail("NullPointerException should raise when creating a empty StateMachine");
+        } catch (NullPointerException npe) {
         }
     }
 

@@ -15,7 +15,7 @@ public class StateMachine implements EventHandler {
 
     final static Logger LOGGER = LoggerFactory.getLogger(StateMachine.class);
 
-    private final List<State> mStateList;
+    private final List<State> mStateList = new ArrayList<State>();
     private final List<State> mDescendantStateList = new ArrayList<State>();
     private State mInitialState;
     private State mCurrentState;
@@ -24,11 +24,10 @@ public class StateMachine implements EventHandler {
     private final List<StateMachine> mPath = new ArrayList<StateMachine>();
     private State mContainer;
 
-    public StateMachine(State... states) {
-        mStateList = Arrays.asList(states);
-        if (!mStateList.isEmpty()) {
-            mInitialState = mStateList.get(0);
-        }
+    public StateMachine(State initialState, State... states) {
+        mStateList.addAll(Arrays.asList(states));
+        mStateList.add(initialState);
+        mInitialState = initialState;
         setOwner();
         generatePath();
         generateDescendantStateList();
@@ -87,6 +86,7 @@ public class StateMachine implements EventHandler {
         if(mCurrentState == null) {
             return; // TODO: throw an exception here
         }
+        // TODO: make a deep copy of the payload (also do this in Parallel)
         mEventQueue.add(new Event(eventName, payload));
         if (mEventQueueInProgress) {
             //events are already processed

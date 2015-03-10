@@ -18,9 +18,9 @@ public class Sub extends State<Sub> {
         mSubMachine.setContainer(this);
     }
 
-    public Sub(String id, State... states) {
+    public Sub(String id, State initialState, State... states) {
         super(id);
-        mSubMachine = new StateMachine(states);
+        mSubMachine = new StateMachine(initialState, states);
         mSubMachine.setContainer(this);
     }
 
