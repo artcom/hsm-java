@@ -74,10 +74,17 @@ public class StateMachine implements EventHandler {
         }
     }
 
-    public void teardown() {
+    public void teardown(Map<String, Object> payload) {
         LOGGER.debug("teardown");
-        exitState(mCurrentState, null, new HashMap<String, Object>());
+        if(payload == null) {
+            payload = new HashMap<String, Object>();
+        }
+        exitState(mCurrentState, null, payload);
         mCurrentState = null;
+    }
+
+    public void teardown() {
+        teardown(new HashMap<String, Object>());
     }
 
     @Override
