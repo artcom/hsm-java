@@ -13,6 +13,7 @@ import de.artcom.hsm.TransitionKind;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.never;
 
 public class ParallelStateMachineTest {
 
@@ -124,4 +125,89 @@ public class ParallelStateMachineTest {
         verify(p11Enter).run();
         verify(p21Enter).run();
     }
+
+    @Test
+    public void parallelStatesCanEmitEventInEnter() {
+        // given:
+        final State p1 = new State("p1");
+        final State p2 = new State("p2");
+        Action p1Enter = new Action() {
+            @Override
+            public void run(){
+                p1.getEventHandler().handleEvent("foo");
+            }
+        };
+        Action p2Action = mock(Action.class);
+        p1.onEnter(p1Enter);
+        p2.addHandler("foo", "p2", TransitionKind.Internal, p2Action);
+        Parallel p = new Parallel("p", 
+            new StateMachine(p1),
+            new StateMachine(p2)
+        );
+        StateMachine sm = new StateMachine(p);
+
+        // when:
+        sm.init();
+
+        // then:
+        verify(p2Action).run();
+    }
+
+    @Test
+    public void parallelStatesCanEmitEventInExitAndHandleAction() {
+        // given:
+        final State p1 = new State("p1");
+        final State p2 = new State("p2");
+        Action p1Action = new Action() {
+            @Override
+            public void run(){
+                p1.getEventHandler().handleEvent("foo");
+            }
+        };
+        Action p2Action = mock(Action.class);
+        p1.onExit(p1Action);
+        p2.addHandler("foo", "p2", TransitionKind.Internal, p2Action);
+        Parallel p = new Parallel("p", 
+            new StateMachine(p1),
+            new StateMachine(p2)
+        );
+        StateMachine sm = new StateMachine(p);
+
+        // when:
+        sm.init();
+        sm.teardown();
+
+        // then:
+        verify(p2Action).run();
+    }
+
+    @Test
+    public void parallelStatesCanEmitEventInExitButIsNotHandledInFinishedStates() {
+        // given:
+        final State p1 = new State("p1");
+        final State p2 = new State("p2");
+        Action p1Action = new Action() {
+            @Override
+            public void run(){
+                p1.getEventHandler().handleEvent("foo");
+            }
+        };
+        Action p2Action = mock(Action.class);
+        p1.onExit(p1Action);
+        p2.addHandler("foo", "p2", TransitionKind.Internal, p2Action);
+        Parallel p = new Parallel("p", 
+            new StateMachine(p2),
+            new StateMachine(p1)
+        );
+        StateMachine sm = new StateMachine(p);
+
+        // when:
+        sm.init();
+        sm.teardown();
+
+        // then:
+        verify(p2Action, never()).run();
+    }
+
+
 }

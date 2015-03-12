@@ -64,16 +64,20 @@ public class StateMachine implements EventHandler {
         if (mInitialState == null) {
             throw new IllegalStateException("Can't init without states defined.");
         } else {
+            mEventQueueInProgress = true;
             if(payload  == null) {
                 payload = new HashMap<String, Object>();
             }
             enterState(null, mInitialState, payload);
+            mEventQueueInProgress = false;
+            processEventQueue();
         }
     }
 
     public void teardown() {
         LOGGER.debug("teardown");
         exitState(mCurrentState, null, new HashMap<String, Object>());
+        mCurrentState = null;
     }
 
     @Override
@@ -88,13 +92,18 @@ public class StateMachine implements EventHandler {
         }
         // TODO: make a deep copy of the payload (also do this in Parallel)
         mEventQueue.add(new Event(eventName, payload));
+        processEventQueue();
+    }
+
+    private void processEventQueue() {
         if (mEventQueueInProgress) {
             //events are already processed
         } else {
             mEventQueueInProgress = true;
             while (mEventQueue.peek() != null) {
-                if(!mCurrentState.handleWithOverride(mEventQueue.poll())) {
-                    LOGGER.debug("nobody handled event: " + eventName);
+                Event event = mEventQueue.poll();
+                if(!mCurrentState.handleWithOverride(event)) {
+                    LOGGER.debug("nobody handled event: " + event.getName());
                 }
             }
             mEventQueueInProgress = false;
@@ -102,7 +111,11 @@ public class StateMachine implements EventHandler {
     }
 
     boolean handleWithOverride(Event event) {
-        return mCurrentState.handleWithOverride(event);
+        if (mCurrentState != null ) {
+            return mCurrentState.handleWithOverride(event);
+        } else {
+            return false;
+        }
     }
 
     void executeHandler(Handler handler, Event event) {
