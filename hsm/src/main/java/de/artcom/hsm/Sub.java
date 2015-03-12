@@ -32,7 +32,7 @@ public class Sub extends State<Sub> {
 
     @Override
     void exit(State prev, State next, Map<String, Object> payload) {
-        mSubMachine.teardown();
+        mSubMachine.teardown(payload);
         super.exit(prev, next, payload);
     }
 

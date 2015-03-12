@@ -35,7 +35,7 @@ public class Parallel extends State<Parallel> {
     void exit(State prev, State next, Map<String, Object> payload) {
         super.exit(prev, next, payload);
         for (StateMachine stateMachine : mStateMachineList) {
-            stateMachine.teardown();
+            stateMachine.teardown(payload);
         }
     }
 

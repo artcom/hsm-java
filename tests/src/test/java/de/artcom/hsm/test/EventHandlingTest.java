@@ -15,6 +15,7 @@ import de.artcom.hsm.StateMachine;
 import de.artcom.hsm.Sub;
 import de.artcom.hsm.TransitionKind;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
@@ -182,7 +183,28 @@ public class EventHandlingTest {
         }
 
         // then
+    }
 
+    @Test
+    public void teardownWithPayload() {
+        // when
+        State a1 = new State("a1").addHandler("T1", "b1", TransitionKind.External).onExit(new Action() {
+            @Override
+            public void run() {
+                mPayload.put("foo", "bar");
+            }
+        });
+        State a = new Sub("a", a1);
+        State b1 = new State("b1").onEnter(new Action() {
+            @Override
+            public void run() {
+                assertThat(mPayload, IsMapContaining.hasKey("foo"));
+            }
+        });
+        State b = new Sub("b", a, b1);
+        StateMachine sm = new StateMachine(b);
+        sm.init();
+        sm.handleEvent("T1");
     }
 }
 
