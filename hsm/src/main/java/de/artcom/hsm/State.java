@@ -68,7 +68,7 @@ public class State<T extends State<T>> {
         return mOwner;
     }
 
-    String getId() {
+    public String getId() {
         return mId;
     }
 
