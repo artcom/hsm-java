@@ -1,6 +1,8 @@
 package de.artcom.hsm;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public class Sub extends State<Sub> {
@@ -58,6 +60,10 @@ public class Sub extends State<Sub> {
     @Override
     Collection<? extends State> getDescendantStates() {
         return mSubMachine.getDescendantStates();
+    }
+
+    public List<State> getAllActiveStates() {
+        return mSubMachine.getAllActiveStates();
     }
 
 }

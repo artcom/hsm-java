@@ -82,4 +82,12 @@ public class Parallel extends State<Parallel> {
         }
         return descendantStates;
     }
+
+    public List<State> getAllActiveStates() {
+        List<State> stateList = new ArrayList<State>();
+        for(StateMachine stateMachine : mStateMachineList) {
+            stateList.addAll(stateMachine.getAllActiveStates());
+        }
+        return stateList;
+    }
 }

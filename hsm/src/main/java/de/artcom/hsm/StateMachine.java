@@ -6,9 +6,11 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class StateMachine implements EventHandler {
@@ -282,5 +284,14 @@ public class StateMachine implements EventHandler {
     List<State> getDescendantStates() {
         return mDescendantStateList;
     }
+
+    public List<State> getAllActiveStates() {
+        ArrayList<State> stateList = new ArrayList<State>();
+        stateList.add(mCurrentState);
+        stateList.addAll(mCurrentState.getAllActiveStates());
+        return stateList;
+    }
+
+
 
 }

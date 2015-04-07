@@ -4,15 +4,19 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.artcom.hsm.Action;
+import de.artcom.hsm.Parallel;
 import de.artcom.hsm.State;
 import de.artcom.hsm.StateMachine;
 import de.artcom.hsm.Sub;
 import de.artcom.hsm.TransitionKind;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.mock;
@@ -274,6 +278,25 @@ public class BasicStateMachineTest {
 
         // then:
         verify(bAction).run();
+    }
+
+    @Test
+    public void getAllActiveStates() {
+        // given:
+        State a11 = new State("a11");
+        State a22 = new State("a22");
+        State a33 = new State("a33");
+        Parallel a1 = new Parallel("a1", new StateMachine(a11), new StateMachine(a22, a33));
+        Sub a = new Sub("a", a1);
+        StateMachine sm = new StateMachine(a);
+        sm.init();
+
+        // when:
+        List<State> allActiveStates = sm.getAllActiveStates();
+
+        // then:
+        assertThat(allActiveStates, hasItems(a, a1, a11, a22));
+        assertThat(allActiveStates, not(hasItems(a33)));
     }
 
 }

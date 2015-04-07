@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class State<T extends State<T>> {
@@ -125,5 +126,9 @@ public class State<T extends State<T>> {
 
     public EventHandler getEventHandler() {
         return mOwner.getPath().get(0);
+    }
+
+    public List<State> getAllActiveStates() {
+        return new ArrayList<State>();
     }
 }
