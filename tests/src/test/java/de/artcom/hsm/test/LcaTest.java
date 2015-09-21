@@ -11,6 +11,8 @@ import de.artcom.hsm.TransitionKind;
 
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 public class LcaTest {
 
@@ -88,6 +90,34 @@ public class LcaTest {
         inOrder.verify(enterB1).run();
         inOrder.verify(enterB21).run();
         inOrder.verify(enterB201).run();
+    }
+
+    @Test
+    public void testLowestCommonAncestor3() {
+        // given:
+        Action enterC1 = mock(Action.class);
+        State a1 = new State("a1")
+                .addHandler("B1", "b1", TransitionKind.External)
+                .addHandler("T1", "c", TransitionKind.External);
+        State c1 = new State("c").onEnter(enterC1);
+        Sub a = new Sub("a", a1, c1);
+        Sub foo = new Sub("foo", a);
+
+        Action enterC2 = mock(Action.class);
+        State b1 = new State("b1").addHandler("T1", "c", TransitionKind.External);
+        State c2 = new State("c").onEnter(enterC2);
+        Sub b = new Sub("b", b1, c2);
+        Sub bar = new Sub("bar", b);
+        StateMachine sm = new StateMachine(foo, bar);
+        sm.init();
+
+        // when:
+        sm.handleEvent("B1");
+        sm.handleEvent("T1");
+
+        // then:
+        verify(enterC2).run();
+        verifyZeroInteractions(enterC1);
     }
 
 }
