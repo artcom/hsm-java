@@ -1,6 +1,6 @@
 # Hierarchical Statemachine for Java
 
-[![Build Status](https://img.shields.io/travis/artcom/hsm-js/master.svg?style=flat)](https://travis-ci.org/artcom/hsm-js)
+[![Build Status](https://img.shields.io/travis/artcom/hsm-java/master.svg?style=flat)](https://travis-ci.org/artcom/hsm-java)
 
 This Project is a hierarchical state machine framework for Java.
 The state machine specification is based on the [UML statemachine](http://en.wikipedia.org/wiki/UML_state_machine).
