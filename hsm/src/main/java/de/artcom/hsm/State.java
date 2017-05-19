@@ -40,23 +40,23 @@ public class State<T extends State<T>> {
         return getThis();
     }
 
-    public T addHandler(String eventName, String targetId, TransitionKind kind, Guard guard) {
-        mHandlers.put(eventName, new Handler(targetId, kind, guard));
+    public T addHandler(String eventName, State target, TransitionKind kind, Guard guard) {
+        mHandlers.put(eventName, new Handler(target, kind, guard));
         return getThis();
     }
 
-    public T addHandler(String eventName, String targetId, TransitionKind kind, Action action) {
-        mHandlers.put(eventName, new Handler(targetId, kind, action));
+    public T addHandler(String eventName, State target, TransitionKind kind, Action action) {
+        mHandlers.put(eventName, new Handler(target, kind, action));
         return getThis();
     }
 
-    public T addHandler(String eventName, String targetId, TransitionKind kind, Action action, Guard guard) {
-        mHandlers.put(eventName, new Handler(targetId, kind, action, guard));
+    public T addHandler(String eventName, State target, TransitionKind kind, Action action, Guard guard) {
+        mHandlers.put(eventName, new Handler(target, kind, action, guard));
         return getThis();
     }
 
-    public T addHandler(String eventName, String targetId, TransitionKind kind) {
-        mHandlers.put(eventName, new Handler(targetId, kind));
+    public T addHandler(String eventName, State target, TransitionKind kind) {
+        mHandlers.put(eventName, new Handler(target, kind));
         return getThis();
     }
 

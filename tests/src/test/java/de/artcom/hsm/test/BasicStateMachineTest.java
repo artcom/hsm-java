@@ -73,12 +73,12 @@ public class BasicStateMachineTest {
     public void eventsWithoutPayloadCauseStateTransition() {
         //given:
         Action onExitAction = mock(Action.class);
-        State on = new State("on")
-                .addHandler("toggle", "off", TransitionKind.External)
-                .onExit(onExitAction);
         Action offEnterAction = mock(Action.class);
         State off = new State("off")
                 .onEnter(offEnterAction);
+        State on = new State("on")
+                .addHandler("toggle", off, TransitionKind.External)
+                .onExit(onExitAction);
         StateMachine sm = new StateMachine(on, off);
         sm.init();
 
@@ -94,8 +94,9 @@ public class BasicStateMachineTest {
     public void impossibleTransitionTest() {
         // given:
         Action onExitAction = mock(Action.class);
+        State off = new State("off");
         State on = new State("on")
-                .addHandler("toggle", "off", TransitionKind.External)
+                .addHandler("toggle", off, TransitionKind.External)
                 .onExit(onExitAction);
         StateMachine sm = new StateMachine(on);
         sm.init();
@@ -111,13 +112,17 @@ public class BasicStateMachineTest {
     @Test
     public void eventsWithPayloadCauseStateTransition() {
         //given:
-        Action onExitAction = mock(Action.class);
-        State on = new State("on")
-                .addHandler("toggle", "off", TransitionKind.External)
-                .onExit(onExitAction);
+
         Action offEnterAction = mock(Action.class);
         State off = new State("off")
                 .onEnter(offEnterAction);
+
+        Action onExitAction = mock(Action.class);
+        State on = new State("on")
+                .addHandler("toggle", off, TransitionKind.External)
+                .onExit(onExitAction);
+
+
         StateMachine sm = new StateMachine(on, off);
         sm.init();
 
@@ -143,9 +148,10 @@ public class BasicStateMachineTest {
                 Assert.assertTrue(((String) mPayload.get("foo")).equals("bar"));
             }
         };
-        State on = new State("on")
-                .addHandler("toggle", "off", TransitionKind.External, toggleAction);
         State off = new State("off");
+        State on = new State("on")
+                .addHandler("toggle", off, TransitionKind.External, toggleAction);
+
         StateMachine sm = new StateMachine(on, off);
         sm.init();
         Map<String, Object> payload = new HashMap<String, Object>();
@@ -172,9 +178,10 @@ public class BasicStateMachineTest {
                 Assert.assertTrue(mPayload.isEmpty());
             }
         };
-        State on = new State("on")
-                .addHandler("toggle", "off", TransitionKind.External, toggleAction);
         State off = new State("off");
+        State on = new State("on")
+                .addHandler("toggle", off, TransitionKind.External, toggleAction);
+
         StateMachine sm = new StateMachine(on, off);
         sm.init();
 
@@ -192,8 +199,8 @@ public class BasicStateMachineTest {
         //given:
         Action onExitAction = mock(Action.class);
         Action toggleAction = mock(Action.class);
-        State on = new State("on")
-                .addHandler("toggle", "on", TransitionKind.Internal, toggleAction)
+        State on = new State("on");
+        on.addHandler("toggle", on, TransitionKind.Internal, toggleAction)
                 .onExit(onExitAction);
         StateMachine sm = new StateMachine(on);
         sm.init();
@@ -209,7 +216,8 @@ public class BasicStateMachineTest {
     @Test
     public void noMatchingStateAvailable() {
         // given:
-        State on = new State("on").addHandler("toggle", "off", TransitionKind.External);
+        State off = new State("off");
+        State on = new State("on").addHandler("toggle", off, TransitionKind.External);
         StateMachine sm = new StateMachine(on);
         sm.init();
 
@@ -224,15 +232,16 @@ public class BasicStateMachineTest {
     @Test
     public void canGetPathString() {
         // given:
-        State a1 = new State("a1").addHandler("T1", "b201", TransitionKind.External);
-        Sub a = new Sub("a", a1);
-        Sub foo = new Sub("foo", a);
-
         State b201 = new State("b201");
         Sub b21 = new Sub("b21", b201);
         Sub b1 = new Sub("b1", b21);
         Sub b = new Sub("b", b1);
         Sub bar = new Sub("bar", b);
+
+        State a1 = new State("a1").addHandler("T1", b201, TransitionKind.External);
+        Sub a = new Sub("a", a1);
+        Sub foo = new Sub("foo", a);
+
         StateMachine sm = new StateMachine(foo, bar);
 
         // when:
@@ -269,7 +278,8 @@ public class BasicStateMachineTest {
         SampleState a1 = new SampleState("a1");
 
         Sub a = new Sub("a", a1);
-        Sub b = new Sub("b", a).addHandler("T1", "b", TransitionKind.Internal, bAction);
+        Sub b = new Sub("b", a);
+        b.addHandler("T1", b, TransitionKind.Internal, bAction);
         Sub c = new Sub("c", b);
         StateMachine stateMachine = new StateMachine(c);
 

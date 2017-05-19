@@ -131,7 +131,10 @@ public class StateMachine implements EventHandler {
         LOGGER.debug("execute handler for event: " + event.getName());
 
         Action handlerAction = handler.getAction();
-        State targetState = getStateById(handler.getTargetStateId());
+        State targetState = handler.getTargetState();
+        if (targetState == null) {
+            throw new IllegalStateException("cant find target state for transition " + event.getName());
+        }
         if (handlerAction != null) {
             handlerAction.setPreviousState(mCurrentState);
             handlerAction.setNextState(targetState);
@@ -212,19 +215,6 @@ public class StateMachine implements EventHandler {
         mCurrentState.exit(previousState, nextState, payload);
     }
 
-    State getStateById(String stateId) {
-        StateMachine stateMachine = mPath.get(0);
-        if (!stateMachine.equals(this)) {
-            return stateMachine.getStateById(stateId);
-        }
-        for (State state : mDescendantStateList) {
-            if (state.getId().equals(stateId)) {
-                return state;
-            }
-        }
-        throw new IllegalStateException("cant find State with ID: " + stateId + " in " + toString());
-    }
-
     private void setOwner() {
         for (State state : mStateList) {
             state.setOwner(this);
@@ -265,6 +255,9 @@ public class StateMachine implements EventHandler {
 
     // TODO: make it package private
     StateMachine findLowestCommonAncestor(State targetState) {
+        if (targetState.getOwner() == null) {
+            throw new IllegalStateException("Target state '" + targetState.getId() + "' is not contained in state machine model.");
+        }
         List<StateMachine> targetPath = targetState.getOwner().getPath();
         int size = mPath.size();
         for (int i = 1; i < size; i++) {

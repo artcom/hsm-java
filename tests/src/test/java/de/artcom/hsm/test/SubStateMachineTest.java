@@ -36,17 +36,22 @@ public class SubStateMachineTest {
         Action onEnterOn = mock(Action.class);
         Action onEnterOff = mock(Action.class);
         State loud = new State("loud")
-                .addHandler("volume_down", "quiet", TransitionKind.External)
                 .onEnter(onEnterLoud);
         State quiet = new State("quiet")
-                .addHandler("volume_up", "loud", TransitionKind.External)
                 .onEnter(onEnterQuiet);
+
+        quiet.addHandler("volume_up", loud, TransitionKind.External);
+        loud.addHandler("volume_down", quiet, TransitionKind.External);
+
         Sub on = new Sub("on", new StateMachine(quiet, loud))
-                .addHandler("switched_off", "off", TransitionKind.External)
                 .onEnter(onEnterOn);
+
         State off = new State("off")
-                .addHandler("switched_on", "on", TransitionKind.External)
                 .onEnter(onEnterOff);
+
+        on.addHandler("switched_off", off, TransitionKind.External);
+        off.addHandler("switched_on", on, TransitionKind.External);
+
         StateMachine sm = new StateMachine(off, on);
         sm.init();
 

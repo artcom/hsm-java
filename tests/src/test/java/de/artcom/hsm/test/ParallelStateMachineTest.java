@@ -51,28 +51,35 @@ public class ParallelStateMachineTest {
         Action onEnterKeyboardOff = mock(Action.class);
 
         State capsOn = new State("caps_on")
-                .onEnter(onEnterCapsOn)
-                .addHandler("capslock", "caps_off", TransitionKind.External);
+                .onEnter(onEnterCapsOn);
+
         State capsOff = new State("caps_off")
-                .onEnter(onEnterCapsOff)
-                .addHandler("capslock", "caps_on", TransitionKind.External);
+                .onEnter(onEnterCapsOff);
+
         StateMachine capsStateMachine = new StateMachine(capsOff, capsOn);
 
+        capsOn.addHandler("capslock", capsOff, TransitionKind.External);
+        capsOff.addHandler("capslock", capsOn, TransitionKind.External);
+
         State numOn = new State("num_on")
-                .onEnter(onEnterNumOn)
-                .addHandler("numlock", "num_off", TransitionKind.External);
+                .onEnter(onEnterNumOn);
+
         State numOff = new State("num_off")
-                .onEnter(onEnterNumOff)
-                .addHandler("numlock", "num_on", TransitionKind.External);
+                .onEnter(onEnterNumOff);
+
         StateMachine numStateMachine = new StateMachine(numOff, numOn);
 
+        numOn.addHandler("numlock", numOff, TransitionKind.External);
+        numOff.addHandler("numlock", numOn, TransitionKind.External);
+
         Parallel keyboardOn = new Parallel("keyboard_on", capsStateMachine, numStateMachine)
-                .onEnter(onEnterKeyboardOn)
-                .addHandler("unplug", "keyboard_off", TransitionKind.External);
+                .onEnter(onEnterKeyboardOn);
         State keyboardOff = new State("keyboard_off")
-                .onEnter(onEnterKeyboardOff)
-                .addHandler("plug", "keyboard_on", TransitionKind.External);
+                .onEnter(onEnterKeyboardOff);
         StateMachine sm = new StateMachine(keyboardOff, keyboardOn);
+
+        keyboardOn.addHandler("unplug", keyboardOff, TransitionKind.External);
+        keyboardOff.addHandler("plug", keyboardOn, TransitionKind.External);
 
         sm.init();
 
@@ -113,7 +120,7 @@ public class ParallelStateMachineTest {
         StateMachine p1 = new StateMachine(p11);
         StateMachine p2 = new StateMachine(p21);
         Parallel s2 = new Parallel("s2", p1, p2);
-        Sub s = new Sub("s", s1, s2).addHandler("T1", "p21", TransitionKind.External);
+        Sub s = new Sub("s", s1, s2).addHandler("T1", p21, TransitionKind.External);
 
         StateMachine sm = new StateMachine(s);
         sm.init();
@@ -139,7 +146,7 @@ public class ParallelStateMachineTest {
         };
         Action p2Action = mock(Action.class);
         p1.onEnter(p1Enter);
-        p2.addHandler("foo", "p2", TransitionKind.Internal, p2Action);
+        p2.addHandler("foo", p2, TransitionKind.Internal, p2Action);
         Parallel p = new Parallel("p", 
             new StateMachine(p1),
             new StateMachine(p2)
@@ -166,7 +173,7 @@ public class ParallelStateMachineTest {
         };
         Action p2Action = mock(Action.class);
         p1.onExit(p1Action);
-        p2.addHandler("foo", "p2", TransitionKind.Internal, p2Action);
+        p2.addHandler("foo", p2, TransitionKind.Internal, p2Action);
         Parallel p = new Parallel("p", 
             new StateMachine(p1),
             new StateMachine(p2)
@@ -194,7 +201,7 @@ public class ParallelStateMachineTest {
         };
         Action p2Action = mock(Action.class);
         p1.onExit(p1Action);
-        p2.addHandler("foo", "p2", TransitionKind.Internal, p2Action);
+        p2.addHandler("foo", p2, TransitionKind.Internal, p2Action);
         Parallel p = new Parallel("p", 
             new StateMachine(p2),
             new StateMachine(p1)

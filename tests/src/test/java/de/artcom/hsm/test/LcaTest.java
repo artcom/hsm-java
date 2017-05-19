@@ -22,7 +22,7 @@ public class LcaTest {
         Action exitA1 = mock(Action.class);
         Action exitA = mock(Action.class);
         Action exitFoo = mock(Action.class);
-        State a1 = new State("a1").onExit(exitA1).addHandler("T1", "bar", TransitionKind.External);
+        State a1 = new State("a1").onExit(exitA1);
         Sub a = new Sub("a", a1).onExit(exitA);
         Sub foo = new Sub("foo", a).onExit(exitFoo);
 
@@ -37,6 +37,9 @@ public class LcaTest {
         Sub b = new Sub("b", b1).onEnter(enterB);
         Sub bar = new Sub("bar", b).onEnter(enterBar);
         StateMachine sm = new StateMachine(foo, bar);
+
+        a1.addHandler("T1", bar, TransitionKind.External);
+
         sm.init();
 
         // when:
@@ -60,7 +63,7 @@ public class LcaTest {
         Action exitA1 = mock(Action.class);
         Action exitA = mock(Action.class);
         Action exitFoo = mock(Action.class);
-        State a1 = new State("a1").onExit(exitA1).addHandler("T1", "b201", TransitionKind.External);
+        State a1 = new State("a1").onExit(exitA1);
         Sub a = new Sub("a", a1).onExit(exitA);
         Sub foo = new Sub("foo", a).onExit(exitFoo);
 
@@ -75,6 +78,9 @@ public class LcaTest {
         Sub b = new Sub("b", b1).onEnter(enterB);
         Sub bar = new Sub("bar", b).onEnter(enterBar);
         StateMachine sm = new StateMachine(foo, bar);
+
+        a1.addHandler("T1", b201, TransitionKind.External);
+
         sm.init();
 
         // when:
@@ -95,20 +101,29 @@ public class LcaTest {
     @Test
     public void testLowestCommonAncestor3() {
         // given:
-        Action enterC1 = mock(Action.class);
-        State a1 = new State("a1")
-                .addHandler("B1", "b1", TransitionKind.External)
-                .addHandler("T1", "c", TransitionKind.External);
-        State c1 = new State("c").onEnter(enterC1);
-        Sub a = new Sub("a", a1, c1);
+        Action enterA2 = mock(Action.class);
+        Action enterB2 = mock(Action.class);
+
+        State a1 = new State("a1");
+        State a2 = new State("a2")
+                .onEnter(enterA2);
+
+        Sub a = new Sub("a", a1, a2);
         Sub foo = new Sub("foo", a);
 
-        Action enterC2 = mock(Action.class);
-        State b1 = new State("b1").addHandler("T1", "c", TransitionKind.External);
-        State c2 = new State("c").onEnter(enterC2);
-        Sub b = new Sub("b", b1, c2);
+        State b1 = new State("b1");
+        State b2 = new State("b2")
+                .onEnter(enterB2);
+
+        Sub b = new Sub("b", b1, b2);
         Sub bar = new Sub("bar", b);
+
         StateMachine sm = new StateMachine(foo, bar);
+
+        a1.addHandler("B1", b1, TransitionKind.External)
+                .addHandler("T1", a2, TransitionKind.External);
+        b1.addHandler("T1", a2, TransitionKind.External);
+
         sm.init();
 
         // when:
@@ -116,8 +131,8 @@ public class LcaTest {
         sm.handleEvent("T1");
 
         // then:
-        verify(enterC2).run();
-        verifyZeroInteractions(enterC1);
+        verify(enterA2).run();
+        verifyZeroInteractions(enterB2);
     }
 
 }

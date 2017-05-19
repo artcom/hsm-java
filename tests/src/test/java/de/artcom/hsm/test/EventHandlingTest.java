@@ -44,13 +44,13 @@ public class EventHandlingTest {
 
         softEgg.onEnter(onEnterSoftEgg);
         hardEgg.onEnter(onEnterHardEgg);
-        rawEgg.addHandler("boil", "softEgg", TransitionKind.External, boilAction);
+        rawEgg.addHandler("boil", softEgg, TransitionKind.External, boilAction);
 
         Action boilTooLongAction = mock(Action.class);
-        rawEgg.addHandler("boil_too_long", "hardEgg", TransitionKind.External, boilTooLongAction);
+        rawEgg.addHandler("boil_too_long", hardEgg, TransitionKind.External, boilTooLongAction);
 
         Action boilTooLongAction2 = mock(Action.class);
-        softEgg.addHandler("boil_too_long", "softEgg", TransitionKind.Internal, boilTooLongAction2);
+        softEgg.addHandler("boil_too_long", softEgg, TransitionKind.Internal, boilTooLongAction2);
 
         sm.init();
 
@@ -70,18 +70,20 @@ public class EventHandlingTest {
         Action enterA2 = mock(Action.class);
         Action enterB = mock(Action.class);
 
-        State a1 = new State("a1").addHandler("T1", "a2", TransitionKind.External, new Guard() {
+        State a1 = new State("a1");
+        State a2 = new State("a2").onEnter(enterA2);
+        Sub a = new Sub("a", a1, a2);
+        State b = new State("b").onEnter(enterB);
+
+        a1.addHandler("T1", a2, TransitionKind.External, new Guard() {
             @Override
             public boolean evaluate(Map<String, Object> payload) {
                 return payload.containsKey("foo");
             }
         });
-        State a2 = new State("a2").onEnter(enterA2);
-        Sub a = new Sub("a", a1, a2).addHandler("T1", "b", TransitionKind.External);
+        a.addHandler("T1", b, TransitionKind.External);
 
-        State b = new State("b").onEnter(enterB);
         StateMachine sm = new StateMachine(a, b);
-
         sm.init();
 
         // when:
@@ -100,18 +102,20 @@ public class EventHandlingTest {
         Action enterA2 = mock(Action.class);
         Action enterB = mock(Action.class);
 
-        State a1 = new State("a1").addHandler("T1", "a2", TransitionKind.External, new Guard() {
+        State a1 = new State("a1");
+        State a2 = new State("a2").onEnter(enterA2);
+        Sub a = new Sub("a", a1, a2);
+        State b = new State("b").onEnter(enterB);
+
+        a1.addHandler("T1", a2, TransitionKind.External, new Guard() {
             @Override
             public boolean evaluate(Map<String, Object> payload) {
                 return payload.containsKey("foo");
             }
         });
-        State a2 = new State("a2").onEnter(enterA2);
-        Sub a = new Sub("a", a1, a2).addHandler("T1", "b", TransitionKind.External);
+        a.addHandler("T1", b, TransitionKind.External);
 
-        State b = new State("b").onEnter(enterB);
         StateMachine sm = new StateMachine(a, b);
-
         sm.init();
 
         // when:
@@ -125,13 +129,7 @@ public class EventHandlingTest {
     @Test
     public void handleTransitionWithPayload() {
         // given
-        State a1 = new State("a1").addHandler("T1", "a2", TransitionKind.External)
-        .onExit(new Action() {
-            @Override
-            public void run() {
-                assertThat(mPayload, Matchers.hasKey("foo"));
-            }
-        });
+        State a1 = new State("a1");
         State a2 = new State("a2")
         .onEnter(new Action() {
             @Override
@@ -139,6 +137,15 @@ public class EventHandlingTest {
                 assertThat(mPayload, Matchers.hasKey("foo"));
             }
         });
+
+        a1.addHandler("T1", a2, TransitionKind.External)
+                .onExit(new Action() {
+                    @Override
+                    public void run() {
+                        assertThat(mPayload, Matchers.hasKey("foo"));
+                    }
+                });
+
         StateMachine sm = new StateMachine(a1, a2);
         sm.init();
 
@@ -188,12 +195,7 @@ public class EventHandlingTest {
     @Test
     public void teardownWithPayload() {
         // when
-        State a1 = new State("a1").addHandler("T1", "b1", TransitionKind.External).onExit(new Action() {
-            @Override
-            public void run() {
-                mPayload.put("foo", "bar");
-            }
-        });
+        State a1 = new State("a1");
         State a = new Sub("a", a1);
         State b1 = new State("b1").onEnter(new Action() {
             @Override
@@ -201,6 +203,14 @@ public class EventHandlingTest {
                 assertThat(mPayload, IsMapContaining.hasKey("foo"));
             }
         });
+
+        a1.addHandler("T1", b1, TransitionKind.External).onExit(new Action() {
+            @Override
+            public void run() {
+                mPayload.put("foo", "bar");
+            }
+        });
+
         State b = new Sub("b", a, b1);
         StateMachine sm = new StateMachine(b);
         sm.init();

@@ -23,21 +23,24 @@ public class GuardTest {
         Action enterA2 = mock(Action.class);
         Action enterA3 = mock(Action.class);
 
-        State a1 = new State("a1").addHandler("T1", "a2", TransitionKind.External, new Guard() {
+        State a1 = new State("a1");
+        State a2 = new State("a2").onEnter(enterA2);
+        State a3 = new State("a3").onEnter(enterA3);
+
+        a1.addHandler("T1", a2, TransitionKind.External, new Guard() {
             @Override
             public boolean evaluate(Map<String, Object> payload) {
                 Boolean foo = (Boolean) payload.get("foo");
                 return foo;
             }
-        }).addHandler("T1", "a3", TransitionKind.External, new Guard() {
+        }).addHandler("T1", a3, TransitionKind.External, new Guard() {
             @Override
             public boolean evaluate(Map<String, Object> payload) {
                 Boolean foo = (Boolean) payload.get("foo");
                 return !foo;
             }
         });
-        State a2 = new State("a2").onEnter(enterA2);
-        State a3 = new State("a3").onEnter(enterA3);
+
         StateMachine sm = new StateMachine(a1, a2, a3);
         sm.init();
 
@@ -57,21 +60,24 @@ public class GuardTest {
         Action enterA2 = mock(Action.class);
         Action enterA3 = mock(Action.class);
 
-        State a1 = new State("a1").addHandler("T1", "a2", TransitionKind.External, new Guard() {
+        State a1 = new State("a1");
+        State a2 = new State("a2").onEnter(enterA2);
+        State a3 = new State("a3").onEnter(enterA3);
+
+        a1.addHandler("T1", a2, TransitionKind.External, new Guard() {
             @Override
             public boolean evaluate(Map<String, Object> payload) {
                 Boolean foo = (Boolean) payload.get("foo");
                 return foo;
             }
-        }).addHandler("T1", "a3", TransitionKind.External, new Guard() {
+        }).addHandler("T1", a3, TransitionKind.External, new Guard() {
             @Override
             public boolean evaluate(Map<String, Object> payload) {
                 Boolean foo = (Boolean) payload.get("foo");
                 return !foo;
             }
         });
-        State a2 = new State("a2").onEnter(enterA2);
-        State a3 = new State("a3").onEnter(enterA3);
+
         StateMachine sm = new StateMachine(a1, a2, a3);
         sm.init();
 
@@ -89,7 +95,8 @@ public class GuardTest {
     public void createHandlerWithActionAndGuard() {
         // given:
         Action a1Action = mock(Action.class);
-        State a = new State("a").addHandler("T1", "a", TransitionKind.Internal, a1Action, new Guard() {
+        State a = new State("a");
+        a.addHandler("T1", a, TransitionKind.Internal, a1Action, new Guard() {
             @Override
             public boolean evaluate(Map<String, Object> payload) {
                 return payload.containsKey("foo");

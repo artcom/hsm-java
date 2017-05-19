@@ -2,32 +2,32 @@ package de.artcom.hsm;
 
 class Handler {
 
-    private final String mTargetStateId;
+    private final State mTargetState;
     private final TransitionKind mKind;
     private Guard mGuard;
     private Action mAction;
 
-    public Handler(String targetStateId, TransitionKind kind, Action action, Guard guard) {
-        mTargetStateId = targetStateId;
+    public Handler(State targetState, TransitionKind kind, Action action, Guard guard) {
+        mTargetState = targetState;
         mKind = kind;
         mAction = action;
         mGuard = guard;
     }
 
-    public Handler(String targetStateId, TransitionKind kind, Guard guard) {
-        mTargetStateId = targetStateId;
+    public Handler(State targetState, TransitionKind kind, Guard guard) {
+        mTargetState = targetState;
         mKind = kind;
         mGuard = guard;
     }
 
-    public Handler(String targetStateId, TransitionKind kind, Action action) {
-        mTargetStateId = targetStateId;
+    public Handler(State targetState, TransitionKind kind, Action action) {
+        mTargetState = targetState;
         mKind = kind;
         mAction = action;
     }
 
-    public Handler(String targetStateId, TransitionKind kind) {
-        mTargetStateId = targetStateId;
+    public Handler(State targetState, TransitionKind kind) {
+        mTargetState = targetState;
         mKind = kind;
     }
 
@@ -38,8 +38,8 @@ class Handler {
         return true;
     }
 
-    public String getTargetStateId() {
-        return mTargetStateId;
+    public State getTargetState() {
+        return mTargetState;
     }
 
     public Action getAction() {
