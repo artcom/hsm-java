@@ -82,7 +82,7 @@ public class LocalTransitionTest {
         sm.handleEvent("T1");
 
         // then:
-        InOrder inOrder = inOrder(sExit, s1Exit, b1Enter);
+        InOrder inOrder = inOrder(s1Exit, sExit, b1Enter);
         inOrder.verify(s1Exit).run();
         inOrder.verify(sExit).run();
         inOrder.verify(b1Enter).run();

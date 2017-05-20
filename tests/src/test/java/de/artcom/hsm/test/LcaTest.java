@@ -46,7 +46,7 @@ public class LcaTest {
         sm.handleEvent("T1");
 
         // then:
-        InOrder inOrder = inOrder(exitA, exitA1, exitFoo, enterB, enterB1, enterBar, enterB21, enterB201);
+        InOrder inOrder = inOrder(exitA1, exitA, exitFoo, enterBar, enterB, enterB1, enterB21, enterB201);
         inOrder.verify(exitA1).run();
         inOrder.verify(exitA).run();
         inOrder.verify(exitFoo).run();
@@ -87,7 +87,7 @@ public class LcaTest {
         sm.handleEvent("T1");
 
         // then:
-        InOrder inOrder = inOrder(exitA, exitA1, exitFoo, enterB, enterB1, enterBar, enterB21, enterB201);
+        InOrder inOrder = inOrder(exitA1, exitA, exitFoo, enterBar, enterB, enterB1, enterB21, enterB201);
         inOrder.verify(exitA1).run();
         inOrder.verify(exitA).run();
         inOrder.verify(exitFoo).run();
@@ -103,6 +103,7 @@ public class LcaTest {
         // given:
         Action enterA2 = mock(Action.class);
         Action enterB2 = mock(Action.class);
+        Action exitM = mock(Action.class);
 
         State a1 = new State("a1");
         State a2 = new State("a2")
@@ -118,7 +119,10 @@ public class LcaTest {
         Sub b = new Sub("b", b1, b2);
         Sub bar = new Sub("bar", b);
 
-        StateMachine sm = new StateMachine(foo, bar);
+        Sub main = new Sub("main", foo, bar)
+                .onExit(exitM);
+
+        StateMachine sm = new StateMachine(main);
 
         a1.addHandler("B1", b1, TransitionKind.External)
                 .addHandler("T1", a2, TransitionKind.External);
@@ -133,6 +137,7 @@ public class LcaTest {
         // then:
         verify(enterA2).run();
         verifyZeroInteractions(enterB2);
+        verifyZeroInteractions(exitM);
     }
 
 }
