@@ -8,11 +8,15 @@ import java.util.Map;
 
 public class Parallel extends State<Parallel> {
 
-    private final List<StateMachine> mStateMachineList;
+    private List<StateMachine> mStateMachineList;
 
     public Parallel(String id, StateMachine... stateMachines) {
         super(id);
-        mStateMachineList = Arrays.asList(stateMachines);
+        setStateMachineList(Arrays.asList(stateMachines));
+    }
+
+    public void setStateMachineList(List<StateMachine> stateMachineList) {
+        mStateMachineList = stateMachineList;
         for (StateMachine stateMachine : mStateMachineList) {
             stateMachine.setContainer(this);
         }
