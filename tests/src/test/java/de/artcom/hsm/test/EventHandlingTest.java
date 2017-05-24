@@ -32,18 +32,18 @@ public class EventHandlingTest {
         State hardEgg = new State("hardEgg");
         final StateMachine sm = new StateMachine(rawEgg, softEgg, hardEgg);
 
+        Action onEnterHardEgg = mock(Action.class);
+        Action onEnterSoftEgg = mock(Action.class);
+
+        softEgg.onEnter(onEnterSoftEgg);
+        hardEgg.onEnter(onEnterHardEgg);
+
         Action boilAction = new Action() {
             @Override
             public void run() {
                 sm.handleEvent("boil_too_long");
             }
         };
-
-        Action onEnterHardEgg = mock(Action.class);
-        Action onEnterSoftEgg = mock(Action.class);
-
-        softEgg.onEnter(onEnterSoftEgg);
-        hardEgg.onEnter(onEnterHardEgg);
         rawEgg.addHandler("boil", softEgg, TransitionKind.External, boilAction);
 
         Action boilTooLongAction = mock(Action.class);

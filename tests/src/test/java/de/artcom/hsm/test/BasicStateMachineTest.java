@@ -2,6 +2,7 @@ package de.artcom.hsm.test;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.InOrder;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +20,7 @@ import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -132,6 +134,34 @@ public class BasicStateMachineTest {
         //then:
         verify(onExitAction).run();
         verify(offEnterAction).run();
+    }
+
+    @Test
+    public void actionsAreCalledBetweenExitAndEnter() {
+        Action aExit = mock(Action.class);
+        Action aaExit = mock(Action.class);
+        Action bEnter = mock(Action.class);
+        Action bbEnter = mock(Action.class);
+        Action action = mock(Action.class);
+
+        State aa = new State("aa").onExit(aaExit);
+        Sub a = new Sub("a", aa).onExit(aExit);
+        State bb = new State("bb").onEnter(bbEnter);
+        Sub b = new Sub("b", bb).onEnter(bEnter);
+
+        aa.addHandler("T", bb, TransitionKind.External, action);
+
+        StateMachine sm = new StateMachine(a, b);
+        sm.init();
+
+        sm.handleEvent("T");
+
+        InOrder inOrder = inOrder(aaExit, aExit, action, bEnter, bbEnter);
+        inOrder.verify(aaExit).run();
+        inOrder.verify(aExit).run();
+        inOrder.verify(action).run();
+        inOrder.verify(bEnter).run();
+        inOrder.verify(bbEnter).run();
     }
 
     @Test

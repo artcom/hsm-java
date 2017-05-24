@@ -106,17 +106,16 @@ public class StateMachine implements EventHandler {
 
     private void processEventQueue() {
         if (mEventQueueInProgress) {
-            //events are already processed
-        } else {
-            mEventQueueInProgress = true;
-            while (mEventQueue.peek() != null) {
-                Event event = mEventQueue.poll();
-                if(!mCurrentState.handleWithOverride(event)) {
-                    LOGGER.debug("nobody handled event: " + event.getName());
-                }
-            }
-            mEventQueueInProgress = false;
+            return;
         }
+        mEventQueueInProgress = true;
+        while (mEventQueue.peek() != null) {
+            Event event = mEventQueue.poll();
+            if (!mCurrentState.handleWithOverride(event)) {
+                LOGGER.debug("nobody handled event: " + event.getName());
+            }
+        }
+        mEventQueueInProgress = false;
     }
 
     boolean handleWithOverride(Event event) {
@@ -130,54 +129,57 @@ public class StateMachine implements EventHandler {
     void executeHandler(Handler handler, Event event) {
         LOGGER.debug("execute handler for event: " + event.getName());
 
-        Action handlerAction = handler.getAction();
+        Action action = handler.getAction();
         State targetState = handler.getTargetState();
         if (targetState == null) {
             throw new IllegalStateException("cant find target state for transition " + event.getName());
         }
-        if (handlerAction != null) {
-            handlerAction.setPreviousState(mCurrentState);
-            handlerAction.setNextState(targetState);
-            handlerAction.setPayload(event.getPayload());
-            handlerAction.run();
-        }
-
         switch (handler.getKind()) {
             case External:
-                doExternalTransition(targetState, event);
+                doExternalTransition(mCurrentState, targetState, action, event);
                 break;
             case Local:
-                doLocalTransition(targetState, event);
+                doLocalTransition(mCurrentState, targetState, action, event);
                 break;
             case Internal:
-                // no state switch required
+                executeAction(action, mCurrentState, targetState, event.getPayload());
                 break;
         }
     }
 
-    private void doLocalTransition(State targetState, Event event) {
-        if(mCurrentState.getDescendantStates().contains(targetState)) {
+    private void executeAction(Action action, State previousState, State targetState, Map<String, Object> payload) {
+        if (action != null) {
+            action.setPreviousState(previousState);
+            action.setNextState(targetState);
+            action.setPayload(payload);
+            action.run();
+        }
+    }
+
+    private void doExternalTransition(State previousState, State targetState, Action action, Event event) {
+        StateMachine lca = findLowestCommonAncestor(targetState);
+        lca.switchState(previousState, targetState, action, event.getPayload());
+    }
+
+    private void doLocalTransition(State previousState, State targetState, Action action, Event event) {
+        if(previousState.getDescendantStates().contains(targetState)) {
             StateMachine stateMachine = findNextStateMachineOnPathTo(targetState);
-            stateMachine.switchState(mCurrentState, targetState, event.getPayload());
-        } else if(targetState.getDescendantStates().contains(mCurrentState)) {
+            stateMachine.switchState(previousState, targetState, action, event.getPayload());
+        } else if(targetState.getDescendantStates().contains(previousState)) {
             int targetLevel = targetState.getOwner().getPath().size();
             StateMachine stateMachine = mPath.get(targetLevel);
-            stateMachine.switchState(mCurrentState, targetState, event.getPayload());
-        } else if(mCurrentState.equals(targetState)) {
+            stateMachine.switchState(previousState, targetState, action, event.getPayload());
+        } else if(previousState.equals(targetState)) {
             //TODO: clarify desired behavior for local transition on self
             //      currently behaves like an internal transition
         } else {
-            doExternalTransition(targetState, event);
+            doExternalTransition(previousState, targetState, action, event);
         }
     }
 
-    private void doExternalTransition(State targetState, Event event) {
-        StateMachine lca = findLowestCommonAncestor(targetState);
-        lca.switchState(mCurrentState, targetState, event.getPayload());
-    }
-
-    void switchState(State previousState, State nextState, Map<String, Object> payload) {
+    private void switchState(State previousState, State nextState, Action action, Map<String, Object> payload) {
         exitState(previousState, nextState, payload);
+        executeAction(action, previousState, nextState, payload);
         enterState(previousState, nextState, payload);
     }
 
