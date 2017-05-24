@@ -76,7 +76,7 @@ public class StateMachine implements EventHandler {
         }
     }
 
-    public void teardown(Map<String, Object> payload) {
+    void teardown(Map<String, Object> payload) {
         LOGGER.debug("teardown");
         if(payload == null) {
             payload = new HashMap<String, Object>();
@@ -209,8 +209,7 @@ public class StateMachine implements EventHandler {
     private StateMachine findNextStateMachineOnPathTo(State targetState) {
         int localLevel = mPath.size();
         StateMachine targetOwner = targetState.getOwner();
-        StateMachine nextStateMachineOnPath = targetOwner.getPath().get(localLevel);
-        return nextStateMachineOnPath;
+        return targetOwner.getPath().get(localLevel);
     }
 
     private void exitState(State previousState, State nextState, Map<String, Object> payload) {
@@ -255,8 +254,7 @@ public class StateMachine implements EventHandler {
         }
     }
 
-    // TODO: make it package private
-    StateMachine findLowestCommonAncestor(State targetState) {
+    private StateMachine findLowestCommonAncestor(State targetState) {
         if (targetState.getOwner() == null) {
             throw new IllegalStateException("Target state '" + targetState.getId() + "' is not contained in state machine model.");
         }
