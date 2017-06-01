@@ -19,12 +19,18 @@ public class StateMachine implements EventHandler {
 
     private final List<State> mStateList = new ArrayList<State>();
     private final List<State> mDescendantStateList = new ArrayList<State>();
+    private String mName;
     private State mInitialState;
     private State mCurrentState;
     private final Queue<Event> mEventQueue = new ConcurrentLinkedQueue<Event>();
     private boolean mEventQueueInProgress = false;
     private final List<StateMachine> mPath = new ArrayList<StateMachine>();
     private State mContainer;
+
+    public StateMachine(String name, State initialState, State... states) {
+        this(initialState, states);
+        mName = name;
+    }
 
     public StateMachine(State initialState, State... states) {
         mStateList.addAll(Arrays.asList(states));
@@ -33,6 +39,7 @@ public class StateMachine implements EventHandler {
         setOwner();
         generatePath();
         generateDescendantStateList();
+        mName = "";
     }
 
     void setContainer(State container) {
@@ -62,9 +69,9 @@ public class StateMachine implements EventHandler {
     }
 
     public void init(Map<String, Object> payload) {
-        LOGGER.debug("init");
+        LOGGER.debug(mName + " init");
         if (mInitialState == null) {
-            throw new IllegalStateException("Can't init without states defined.");
+            throw new IllegalStateException(mName + " Can't init without states defined.");
         } else {
             mEventQueueInProgress = true;
             if(payload  == null) {
@@ -77,7 +84,7 @@ public class StateMachine implements EventHandler {
     }
 
     void teardown(Map<String, Object> payload) {
-        LOGGER.debug("teardown");
+        LOGGER.debug(mName + " teardown");
         if(payload == null) {
             payload = new HashMap<String, Object>();
         }
@@ -112,7 +119,7 @@ public class StateMachine implements EventHandler {
         while (mEventQueue.peek() != null) {
             Event event = mEventQueue.poll();
             if (!mCurrentState.handleWithOverride(event)) {
-                LOGGER.debug("nobody handled event: " + event.getName());
+                LOGGER.debug(mName + " nobody handled event: " + event.getName());
             }
         }
         mEventQueueInProgress = false;
@@ -127,12 +134,12 @@ public class StateMachine implements EventHandler {
     }
 
     void executeHandler(Handler handler, Event event) {
-        LOGGER.debug("execute handler for event: " + event.getName());
+        LOGGER.debug(mName + " execute handler for event: " + event.getName());
 
         Action action = handler.getAction();
         State targetState = handler.getTargetState();
         if (targetState == null) {
-            throw new IllegalStateException("cant find target state for transition " + event.getName());
+            throw new IllegalStateException(mName + " cant find target state for transition " + event.getName());
         }
         switch (handler.getKind()) {
             case External:
@@ -256,7 +263,7 @@ public class StateMachine implements EventHandler {
 
     private StateMachine findLowestCommonAncestor(State targetState) {
         if (targetState.getOwner() == null) {
-            throw new IllegalStateException("Target state '" + targetState.getId() + "' is not contained in state machine model.");
+            throw new IllegalStateException(mName + " Target state '" + targetState.getId() + "' is not contained in state machine model.");
         }
         List<StateMachine> targetPath = targetState.getOwner().getPath();
         int size = mPath.size();
