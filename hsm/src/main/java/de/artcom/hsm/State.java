@@ -19,7 +19,7 @@ public class State<T extends State<T>> {
     private Action mOnEnterAction;
     private Action mOnExitAction;
     private final LinkedListMultimap<String, Handler> mHandlers;
-    private StateMachine mOwner;
+    protected StateMachine mOwner;
 
     protected T getThis() {
         return (T) this;

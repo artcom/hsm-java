@@ -293,7 +293,11 @@ public class StateMachine implements EventHandler {
     }
 
 
-    public String getName() {
+    String getName() {
         return mName;
+    }
+
+    void setName(String name) {
+        this.mName = name;
     }
 }

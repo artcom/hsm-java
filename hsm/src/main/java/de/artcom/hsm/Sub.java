@@ -66,4 +66,9 @@ public class Sub extends State<Sub> {
         return mSubMachine.getAllActiveStates();
     }
 
+    @Override
+    void setOwner(StateMachine ownerMachine) {
+        super.setOwner(ownerMachine);
+        mSubMachine.setName(mOwner.getName());
+    }
 }
