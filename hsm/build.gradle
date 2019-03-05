@@ -30,7 +30,7 @@ publishing {
 }
 
 dependencies {
-    compile 'org.slf4j:slf4j-api:1.7.3'
+//    compile 'org.slf4j:slf4j-api:1.7.3'
     /* compile 'com.google.guava:guava:17.0' */
     compile 'com.google.guava:guava-jdk5:13.0'
 }
