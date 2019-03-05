@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class StateMachine implements EventHandler {
 
-    final static Logger LOGGER = LoggerFactory.getLogger(StateMachine.class);
+    static Logger LOGGER = LoggerFactory.getLogger(StateMachine.class);
 
     private final List<State> mStateList = new ArrayList<State>();
     private final List<State> mDescendantStateList = new ArrayList<State>();
@@ -26,7 +26,7 @@ public class StateMachine implements EventHandler {
     private boolean mEventQueueInProgress = false;
     private final List<StateMachine> mPath = new ArrayList<StateMachine>();
     private State mContainer;
-
+    private ILogger logger;
     public StateMachine(String name, State initialState, State... states) {
         this(initialState, states);
         mName = name;
@@ -42,6 +42,10 @@ public class StateMachine implements EventHandler {
         mName = "";
     }
 
+    void setLogger(ILogger log)
+    {
+        LOGGER = (Logger)log;
+    }
     void setContainer(State container) {
         mContainer = container;
     }
