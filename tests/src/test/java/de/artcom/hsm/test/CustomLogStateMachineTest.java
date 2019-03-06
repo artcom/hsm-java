@@ -22,13 +22,15 @@ public class CustomLogStateMachineTest {
     @Test
     public void getAllActiveStates() {
         // given:
+        ILogger log = new Logger();
         State a11 = new State("a11");
         State a22 = new State("a22");
         State a33 = new State("a33");
         Parallel a1 = new Parallel("a1", new StateMachine(a11), new StateMachine(a22, a33));
         Sub a = new Sub("a", a1);
+        a11.setLogger(log);
         StateMachine sm = new StateMachine(a);
-        sm.setLogger(new Logger());
+        sm.setLogger(log);
         sm.init();
 
         // when:

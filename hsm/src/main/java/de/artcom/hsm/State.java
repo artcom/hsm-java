@@ -2,18 +2,23 @@ package de.artcom.hsm;
 
 import com.google.common.collect.LinkedListMultimap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class State<T extends State<T>> {
 
-    final static Logger LOGGER = LoggerFactory.getLogger(State.class);
+    static ILogger LOGGER = new ILogger() {
+        @Override
+        public void debug(String message) {
+            Logger.getAnonymousLogger().log(Level.INFO,message);
+        }
+    };
 
     private final String mId;
     private Action mOnEnterAction;
@@ -29,7 +34,10 @@ public class State<T extends State<T>> {
         mHandlers = LinkedListMultimap.create();
         mId = id;
     }
-
+    public void setLogger(ILogger log)
+    {
+        LOGGER = log;
+    }
     public T onEnter(Action onEnterAction) {
         mOnEnterAction = onEnterAction;
         return getThis();
