@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_hsm-java.tests" default="compile.module.hsm-java.tests">
+  <dirname property="module.hsm-java.tests.basedir" file="${ant.file.module_hsm-java.tests}"/>
+  
+  <property name="module.jdk.home.hsm-java.tests" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.hsm-java.tests" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.hsm-java.tests" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.hsm-java.tests" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="hsm-java.tests.output.dir" value="${module.hsm-java.tests.basedir}/../../../classes/production/hsm-java.tests"/>
+  <property name="hsm-java.tests.testoutput.dir" value="${module.hsm-java.tests.basedir}/../../../classes/test/hsm-java.tests"/>
+  
+  <path id="hsm-java.tests.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="hsm-java.tests.module.production.classpath">
+    <path refid="${module.jdk.classpath.hsm-java.tests}"/>
+  </path>
+  
+  <path id="hsm-java.tests.runtime.production.module.classpath">
+    <pathelement location="${hsm-java.tests.output.dir}"/>
+  </path>
+  
+  <path id="hsm-java.tests.module.classpath">
+    <path refid="${module.jdk.classpath.hsm-java.tests}"/>
+    <pathelement location="${hsm-java.tests.output.dir}"/>
+  </path>
+  
+  <path id="hsm-java.tests.runtime.module.classpath">
+    <pathelement location="${hsm-java.tests.testoutput.dir}"/>
+    <pathelement location="${hsm-java.tests.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.hsm-java.tests">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.hsm-java.tests">
+    <patternset refid="excluded.from.module.hsm-java.tests"/>
+  </patternset>
+  
+  
+  <target name="compile.module.hsm-java.tests" depends="compile.module.hsm-java.tests.production,compile.module.hsm-java.tests.tests" description="Compile module hsm-java.tests"/>
+  
+  <target name="compile.module.hsm-java.tests.production" depends="register.custom.compilers" description="Compile module hsm-java.tests; production classes"/>
+  
+  <target name="compile.module.hsm-java.tests.tests" depends="register.custom.compilers,compile.module.hsm-java.tests.production" description="compile module hsm-java.tests; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.hsm-java.tests" description="cleanup module">
+    <delete dir="${hsm-java.tests.output.dir}"/>
+    <delete dir="${hsm-java.tests.testoutput.dir}"/>
+  </target>
+</project>

@@ -1,8 +1,8 @@
 package de.artcom.hsm;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,10 +12,17 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class StateMachine implements EventHandler {
 
-    final static Logger LOGGER = LoggerFactory.getLogger(StateMachine.class);
+    ILogger LOGGER = new ILogger() {
+        @Override
+        public void debug(String message) {
+            Logger.getAnonymousLogger().log(Level.INFO,message);
+        }
+    };
 
     private final List<State> mStateList = new ArrayList<State>();
     private final List<State> mDescendantStateList = new ArrayList<State>();
@@ -26,7 +33,7 @@ public class StateMachine implements EventHandler {
     private boolean mEventQueueInProgress = false;
     private final List<StateMachine> mPath = new ArrayList<StateMachine>();
     private State mContainer;
-
+    private ILogger logger;
     public StateMachine(String name, State initialState, State... states) {
         this(initialState, states);
         mName = name;
@@ -42,6 +49,10 @@ public class StateMachine implements EventHandler {
         mName = "";
     }
 
+    public void setLogger(ILogger log)
+    {
+        LOGGER = log;
+    }
     void setContainer(State container) {
         mContainer = container;
     }

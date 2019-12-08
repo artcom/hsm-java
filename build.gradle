@@ -4,7 +4,9 @@ task wrapper(type: Wrapper) {
 
 allprojects {
     repositories {
-        mavenCentral()
+        jcenter()
+        google()
+        mavenLocal()
     }
 }
 
