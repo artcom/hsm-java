@@ -1,7 +1,7 @@
 package de.artcom.hsm;
 
-import com.google.common.collect.LinkedListMultimap;
 
+import com.google.common.collect.LinkedListMultimap;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 public class State<T extends State<T>> {
 
-    static ILogger LOGGER = new ILogger() {
+    ILogger LOGGER = new ILogger() {
         @Override
         public void debug(String message) {
             Logger.getAnonymousLogger().log(Level.INFO,message);

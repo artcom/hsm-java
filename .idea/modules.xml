@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/hsm-java.iml" filepath="$PROJECT_DIR$/hsm-java.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/hsm/hsm-java.hsm.iml" filepath="$PROJECT_DIR$/.idea/modules/hsm/hsm-java.hsm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/hsm/hsm-java.hsm.main.iml" filepath="$PROJECT_DIR$/.idea/modules/hsm/hsm-java.hsm.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/hsm/hsm-java.hsm.test.iml" filepath="$PROJECT_DIR$/.idea/modules/hsm/hsm-java.hsm.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tests/hsm-java.tests.iml" filepath="$PROJECT_DIR$/.idea/modules/tests/hsm-java.tests.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tests/hsm-java.tests.main.iml" filepath="$PROJECT_DIR$/.idea/modules/tests/hsm-java.tests.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tests/hsm-java.tests.test.iml" filepath="$PROJECT_DIR$/.idea/modules/tests/hsm-java.tests.test.iml" />
+    </modules>
+  </component>
+</project>

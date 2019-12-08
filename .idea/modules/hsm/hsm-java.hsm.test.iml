@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id=":hsm:test" external.linked.project.path="$MODULE_DIR$/../../../hsm" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="GRADLE" external.system.module.group="hsm-java" external.system.module.type="sourceSet" external.system.module.version="0.2.3" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7">
+    <output-test url="file://$MODULE_DIR$/../../../hsm/out/test/classes" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../../hsm/src/test" />
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="hsm-java.hsm.main" />
+    <orderEntry type="library" name="Gradle: com.google.guava:guava-jdk5:13.0" level="project" />
+  </component>
+  <component name="TestModuleProperties" production-module="hsm-java.hsm.main" />
+</module>

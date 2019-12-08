@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 
 public class StateMachine implements EventHandler {
 
-    static ILogger LOGGER = new ILogger() {
+    ILogger LOGGER = new ILogger() {
         @Override
         public void debug(String message) {
             Logger.getAnonymousLogger().log(Level.INFO,message);

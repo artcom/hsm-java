@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_hsm-java.hsm.test" default="compile.module.hsm-java.hsm.test">
+  <dirname property="module.hsm-java.hsm.test.basedir" file="${ant.file.module_hsm-java.hsm.test}"/>
+  
+  <property name="module.jdk.home.hsm-java.hsm.test" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.hsm-java.hsm.test" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.hsm-java.hsm.test" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.hsm-java.hsm.test" value="-encoding UTF-8 -source 7 -target 1.7 ${compiler.args}"/>
+  
+  <property name="hsm-java.hsm.test.output.dir" value="undefined"/>
+  <property name="hsm-java.hsm.test.testoutput.dir" value="${module.hsm-java.hsm.test.basedir}/../../../hsm/out/test/classes"/>
+  
+  <path id="hsm-java.hsm.test.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="hsm-java.hsm.test.module.production.classpath">
+    <path refid="${module.jdk.classpath.hsm-java.hsm.test}"/>
+    <pathelement location="${hsm-java.hsm.main.output.dir}"/>
+    <path refid="library.gradle:_org.slf4j:slf4j-api:1.7.3.classpath"/>
+    <path refid="library.gradle:_com.google.guava:guava-jdk5:13.0.classpath"/>
+  </path>
+  
+  <path id="hsm-java.hsm.test.runtime.production.module.classpath">
+    <path refid="hsm-java.hsm.main.runtime.production.module.classpath"/>
+    <path refid="library.gradle:_org.slf4j:slf4j-api:1.7.3.classpath"/>
+    <path refid="library.gradle:_com.google.guava:guava-jdk5:13.0.classpath"/>
+  </path>
+  
+  <path id="hsm-java.hsm.test.module.classpath">
+    <path refid="${module.jdk.classpath.hsm-java.hsm.test}"/>
+    <pathelement location="${hsm-java.hsm.main.output.dir}"/>
+    <path refid="library.gradle:_org.slf4j:slf4j-api:1.7.3.classpath"/>
+    <path refid="library.gradle:_com.google.guava:guava-jdk5:13.0.classpath"/>
+  </path>
+  
+  <path id="hsm-java.hsm.test.runtime.module.classpath">
+    <pathelement location="${hsm-java.hsm.test.testoutput.dir}"/>
+    <path refid="hsm-java.hsm.main.runtime.module.classpath"/>
+    <path refid="library.gradle:_org.slf4j:slf4j-api:1.7.3.classpath"/>
+    <path refid="library.gradle:_com.google.guava:guava-jdk5:13.0.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.hsm-java.hsm.test">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.hsm-java.hsm.test">
+    <patternset refid="excluded.from.module.hsm-java.hsm.test"/>
+  </patternset>
+  
+  
+  <target name="compile.module.hsm-java.hsm.test" depends="compile.module.hsm-java.hsm.test.production,compile.module.hsm-java.hsm.test.tests" description="Compile module hsm-java.hsm.test"/>
+  
+  <target name="compile.module.hsm-java.hsm.test.production" depends="register.custom.compilers,compile.module.hsm-java.hsm.main" description="Compile module hsm-java.hsm.test; production classes"/>
+  
+  <target name="compile.module.hsm-java.hsm.test.tests" depends="register.custom.compilers,compile.module.hsm-java.hsm.test.production" description="compile module hsm-java.hsm.test; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.hsm-java.hsm.test" description="cleanup module">
+    <delete dir="${hsm-java.hsm.test.output.dir}"/>
+    <delete dir="${hsm-java.hsm.test.testoutput.dir}"/>
+  </target>
+</project>

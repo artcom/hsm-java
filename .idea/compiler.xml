@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="hsm-java.hsm.main" target="1.7" />
+      <module name="hsm-java.hsm.test" target="1.7" />
+      <module name="hsm-java.tests.main" target="1.8" />
+      <module name="hsm-java.tests.test" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
