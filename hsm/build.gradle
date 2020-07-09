@@ -35,7 +35,7 @@ dependencies {
     compile 'com.google.guava:guava-jdk5:13.0'
 }
 
-task reportDate << {
+task reportDate doLast {
     println "execution at: " + new Date()
     println "group: " + project.group
     println "name: " + project.name

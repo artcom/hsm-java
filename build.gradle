@@ -1,5 +1,7 @@
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.2.1'
+apply plugin: 'jdepend'
+
+wrapper {
+    gradleVersion = '6.5.1'
 }
 
 allprojects {
@@ -7,4 +9,3 @@ allprojects {
         mavenCentral()
     }
 }
-

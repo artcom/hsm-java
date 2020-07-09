@@ -4,9 +4,9 @@ apply plugin: 'jacoco'
 apply plugin: 'pmd'
 
 task jacocoReport(type: JacocoReport) {
-    classDirectories = files(project(':hsm').sourceSets.main.output)
-    sourceDirectories = files(project(':hsm').sourceSets.main.java.getSrcDirs())
-    executionData test
+    getClassDirectories().setFrom(files(project(':hsm').sourceSets.main.output))
+    getSourceDirectories().setFrom(files(project(':hsm').sourceSets.main.java.getSrcDirs()))
+    getExecutionData().setFrom(test)
 }
 
 pmd {
