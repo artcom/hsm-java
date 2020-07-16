@@ -1,5 +1,5 @@
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.2.1'
+wrapper {
+    gradleVersion = '6.5.1'
 }
 
 allprojects {
@@ -7,4 +7,3 @@ allprojects {
         mavenCentral()
     }
 }
-

@@ -3,7 +3,7 @@ apply plugin: 'pmd'
 apply plugin: 'maven-publish'
 
 pmd {
-    toolVersion = '5.1.3'
+    toolVersion = '6.0.0'
     ignoreFailures = true
     ruleSetFiles = files("${rootDir}/pmd-rules.xml")
 }
@@ -35,7 +35,7 @@ dependencies {
     compile 'com.google.guava:guava-jdk5:13.0'
 }
 
-task reportDate << {
+task reportDate doLast {
     println "execution at: " + new Date()
     println "group: " + project.group
     println "name: " + project.name
